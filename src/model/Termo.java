@@ -39,7 +39,7 @@ public class Termo {
 					.append(" Nº ").append(fs.getEndereco().getNumero())
 					.append(", ").append(fs.getEndereco().getCep())
 					.append(", Bairro ").append(fs.getEndereco().getBairro())
-					.append(", ").append(fs.getEndereco().getCidade())
+					.append(", ").append(fs.getEndereco().getCidadeAtual())
 					.append(", ").append(fs.getEndereco().getEstado()).toString();
 		case "$NUMR": fs.getEndereco().getNumero();
 		case "$ADMIS": new Data().getStringDate(servidor.getDataAdmissao());

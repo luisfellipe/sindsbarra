@@ -28,7 +28,7 @@ public class ServidorTeste {
 		Endereco e = new Endereco();
 		e.setBairro("Santa catarina");
 		e.setCep("34978-555");
-		e.setCidade("São Paulo");
+		e.setCidadeAtual("São Paulo");
 		e.setEstado("SP");
 		e.setNumero(45);
 		e.setRua("Rua das maravilhas");

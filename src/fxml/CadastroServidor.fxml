@@ -61,7 +61,7 @@
             <Font name="System Bold" size="32.0" />
          </font>
       </Label>
-      <Label layoutX="674.0" layoutY="111.0" text="Endereço">
+      <Label layoutX="659.0" layoutY="97.0" text="Endereço">
          <font>
             <Font name="System Bold" size="20.0" />
          </font></Label>
@@ -72,43 +72,43 @@
       </Label>
       <TextField fx:id="tfTelefone" layoutX="352.0" layoutY="169.0" prefHeight="26.0" prefWidth="143.0" promptText="(xx) x xxxx-xxxx" />
       <TextField fx:id="tfRG" layoutX="185.0" layoutY="230.0" prefHeight="26.0" prefWidth="98.0" promptText="xxx.xxx-xx" />
-      <TextField fx:id="tfEstado" layoutX="797.0" layoutY="355.0" prefHeight="26.0" prefWidth="80.0" promptText="estado" />
+      <TextField fx:id="tfEstado" layoutX="791.0" layoutY="417.0" prefHeight="26.0" prefWidth="80.0" promptText="estado" />
       <Label layoutX="185.0" layoutY="210.0" text="RG">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label layoutX="692.0" layoutY="335.0" text="Nº">
+      <Label layoutX="686.0" layoutY="397.0" text="Nº">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="tfNumero" layoutX="691.0" layoutY="355.0" prefHeight="26.0" prefWidth="82.0" />
+      <TextField fx:id="tfNumero" layoutX="685.0" layoutY="417.0" prefHeight="26.0" prefWidth="82.0" />
       <Separator layoutX="522.0" layoutY="93.0" orientation="VERTICAL" prefHeight="466.0" prefWidth="0.0" />
-      <Label layoutX="797.0" layoutY="334.0" text="Estado">
+      <Label layoutX="791.0" layoutY="396.0" text="Estado">
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Label>
-      <Label layoutX="555.0" layoutY="158.0" text="Cidade">
+      <Label layoutX="549.0" layoutY="220.0" text="Cidade Atual">
       <font>
             <Font name="System Bold" size="14.0" />
          </font></Label>
-      <Label layoutX="555.0" layoutY="218.0" text="Bairro">
+      <Label layoutX="549.0" layoutY="280.0" text="Bairro">
       <font>
             <Font name="System Bold" size="14.0" />
          </font></Label>
-      <Label layoutX="555.0" layoutY="278.0" text="Rua">
+      <Label layoutX="549.0" layoutY="340.0" text="Rua">
       <font>
             <Font name="System Bold" size="14.0" />
          </font></Label>
-      <TextField fx:id="tfCidade" layoutX="555.0" layoutY="178.0" prefHeight="26.0" prefWidth="320.0" promptText="nome da cidade" />
-      <TextField fx:id="tfBairro" layoutX="555.0" layoutY="238.0" prefHeight="26.0" prefWidth="320.0" promptText="nome do bairro" />
-      <TextField fx:id="tfRua" layoutX="557.0" layoutY="298.0" prefHeight="26.0" prefWidth="320.0" promptText="nome da rua" />
-      <TextField fx:id="tfCep" layoutX="560.0" layoutY="355.0" prefHeight="28.0" prefWidth="99.0" promptText="xxxxx-xxx">
+      <TextField fx:id="tfCidade" layoutX="549.0" layoutY="240.0" prefHeight="26.0" prefWidth="320.0" promptText="nome da cidade" />
+      <TextField fx:id="tfBairro" layoutX="549.0" layoutY="300.0" prefHeight="26.0" prefWidth="320.0" promptText="nome do bairro" />
+      <TextField fx:id="tfRua" layoutX="551.0" layoutY="360.0" prefHeight="26.0" prefWidth="320.0" promptText="nome da rua" />
+      <TextField fx:id="tfCep" layoutX="554.0" layoutY="417.0" prefHeight="28.0" prefWidth="99.0" promptText="xxxxx-xxx">
          <font>
             <Font size="14.0" />
          </font></TextField>
-      <Label layoutX="560.0" layoutY="335.0" text="CEP">
+      <Label layoutX="554.0" layoutY="397.0" text="CEP">
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Label>
@@ -144,12 +144,12 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label layoutX="29.0" layoutY="462.0" text="Pai:">
+      <Label layoutX="29.0" layoutY="462.0" text="Nome da Mae">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label layoutX="29.0" layoutY="515.0" text="Mae:">
+      <Label layoutX="29.0" layoutY="515.0" text="Nome do Pai">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
@@ -174,5 +174,11 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Button>
+      <Label layoutX="549.0" layoutY="160.0" text="Cidade Natal">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <TextField layoutX="549.0" layoutY="180.0" prefHeight="26.0" prefWidth="320.0" />
 	</children>
 </AnchorPane>

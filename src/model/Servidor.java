@@ -12,7 +12,7 @@ public class Servidor extends Pessoa {
 	private String funcao, matricula;
 	private LocalDate dataAdmissao;
 	private Ficha fi;
-	private int qtdDependentes;
+	private Integer qtdDependentes;
 	private Set<ConvenioServidor> convenios;
 	
 	public Servidor() {
@@ -69,14 +69,14 @@ public class Servidor extends Pessoa {
 	/**
 	 * @return the qtdDependentes
 	 */
-	public int getQtdDependentes() {
+	public Integer getQtdDependentes() {
 		return qtdDependentes;
 	}
 
 	/**
 	 * @param qtdDependentes the qtdDependentes to set
 	 */
-	public void setQtdDependentes(int qtdDependentes) {
+	public void setQtdDependentes(Integer qtdDependentes) {
 		this.qtdDependentes = qtdDependentes;
 	}
 

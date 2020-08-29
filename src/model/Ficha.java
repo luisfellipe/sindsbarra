@@ -2,7 +2,7 @@ package model;
 
 public class Ficha {
 
-	private String nomePai, nomeMae, telefone, sexo, estadoCivil, naturalidade;
+	private String nomePai, nomeMae, telefone, sexo, estadoCivil;
 	private Endereco endereco;
 	
 	
@@ -12,7 +12,6 @@ public class Ficha {
 		sexo = null;
 		estadoCivil = null;
 		telefone = null;
-		naturalidade = null;
 		endereco = null;
 	}
 	
@@ -42,20 +41,6 @@ public class Ficha {
 	 */
 	public void setNomeMae(String nomeMae) {
 		this.nomeMae = nomeMae;
-	}
-
-	/**
-	 * @return the naturalidade
-	 */
-	public String getNaturalidade() {
-		return naturalidade;
-	}
-
-	/**
-	 * @param naturalidade the naturalidade to set
-	 */
-	public void setNaturalidade(String naturalidade) {
-		this.naturalidade = naturalidade;
 	}
 
 	/**

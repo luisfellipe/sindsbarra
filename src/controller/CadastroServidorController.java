@@ -6,7 +6,7 @@ import java.util.Set;
 import dao.ConvenioServidor;
 import dao.ServidorDB;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;                       
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
@@ -24,7 +24,6 @@ public class CadastroServidorController implements Initializable {
 	@FXML
 	private AnchorPane rootLayout;
 
-	
 	@FXML
 	private TextField tfNome;
 	@FXML
@@ -57,7 +56,7 @@ public class CadastroServidorController implements Initializable {
 	private TextField tfNumero;
 	@FXML
 	private TextField tfEstado;
-	
+
 	@FXML
 	private DatePicker dataPickerAdmissao;
 	@FXML
@@ -67,10 +66,6 @@ public class CadastroServidorController implements Initializable {
 	@FXML
 	private ChoiceBox<String> cbSexo;
 	@FXML
-	private Button btnSalvar;
-	@FXML
-	private Button btnConvenios;
-	@FXML
 	private Button btnFechar;
 
 	@Override
@@ -79,6 +74,7 @@ public class CadastroServidorController implements Initializable {
 		cbSexo.getItems().addAll("Masculino", "Feminino");
 
 	}
+
 	/*
 	 * Adiciona servidor no banco de dados
 	 */
@@ -94,34 +90,34 @@ public class CadastroServidorController implements Initializable {
 		servidor.setQtdDependentes(Integer.parseInt(tfDependentes.getText()));
 		servidor.setDataNasc(dataPickerNasc.getValue());
 		servidor.setDataAdmissao(dataPickerAdmissao.getValue());
-		
+
 		fi.setTelefone(tfTelefone.getText());
 		fi.setEstadoCivil(cbEstadoCivil.getSelectionModel().getSelectedItem());
 		fi.setSexo(cbSexo.getSelectionModel().getSelectedItem());
-		fi.setNaturalidade(tfNaturalidade.getText());
 		fi.setNomePai(tfNomePai.getText());
 		fi.setNomeMae(tfNomeMae.getText());
-		
-		//Endereco
+
+		// Endereco
 		Endereco endereco = new Endereco();
+		endereco.setCidadeNatal(tfNaturalidade.getText());
 		endereco.setRua(tfRua.getText());
 		endereco.setNumero(Integer.parseInt(tfNumero.getText()));
 		endereco.setBairro(tfBairro.getText());
 		endereco.setCep(tfCep.getText());
-		endereco.setCidade(tfCidade.getText());
+		endereco.setCidadeAtual(tfCidade.getText());
 		endereco.setEstado(tfEstado.getText());
-		
+
 		fi.setEndereco(endereco);
 		servidor.setFicha(fi);
 
-		//salva servidor no banco de dados
+		// salva servidor no banco de dados
 		new ServidorDB().saveServidor(servidor);
-		
+
 	}
-	
+
 	@FXML
 	private void adicionarConvenio() {
-		
+
 	}
 
 	@FXML
@@ -138,43 +134,67 @@ public class CadastroServidorController implements Initializable {
 	/**
 	 * Servidor selecionado na tabela principal
 	 * 
-	 * @param s
+	 * @param servidor
 	 */
-	public void visualizar(Servidor s) {
-		tfNome.setText(s.getNome());
-		tfCpf.setText(s.getCpf());
-		tfFuncao.setText(s.getFuncao());
-		tfMatricula.setText(s.getMatricula());
-		tfDependentes.setText(s.getQtdDependentes()+"");
-		tfRG.setText(s.getRg());
-				
-		Ficha f = s.getFicha();
-		tfNaturalidade.setText(f.getNaturalidade());
-		tfNomeMae.setText(f.getNomeMae());
-		tfNomePai.setText(f.getNomePai());
-		tfTelefone.setText(f.getTelefone());
-		
-		cbEstadoCivil.getItems().add(f.getEstadoCivil());
-		cbSexo.getItems().add(f.getSexo());
-		
-		
-		Endereco e = s.getFicha().getEndereco();
-		tfCep.setText(e.getCep());
-		tfCidade.setText(e.getCidade());
-		tfBairro.setText(e.getBairro());
-		tfEstado.setText(e.getEstado());
-		tfRua.setText(e.getRua());
-		tfNumero.setText(e.getNumero()+"");
-		
+	public void visualizar(Servidor servidor) {
+		{
+			if (servidor.getNome() != null)
+				tfNome.setText(servidor.getNome());
+			if (servidor.getCpf() != null)
+				tfCpf.setText(servidor.getCpf());
+			if (servidor.getFuncao() != null)
+				tfFuncao.setText(servidor.getFuncao());
+			if (servidor.getMatricula() != null)
+				tfMatricula.setText(servidor.getMatricula());
+			if (servidor.getQtdDependentes() != null)
+				tfDependentes.setText(servidor.getQtdDependentes() + "");
+			if (servidor.getRg() != null)
+				tfRG.setText(servidor.getRg());
+			if (servidor.getDataAdmissao() != null)
+				dataPickerAdmissao.setValue(servidor.getDataAdmissao());
+			if (servidor.getDataNasc() != null)
+				dataPickerNasc.setValue(servidor.getDataNasc());
 
-		//System.out.println(servidor.toString());
-		dataPickerAdmissao.setValue(s.getDataAdmissao());
-		dataPickerNasc.setValue(s.getDataNasc());
+			Ficha fichaServidor = servidor.getFicha();
+
+			if (fichaServidor != null) {
+				if (fichaServidor.getNomeMae() != null)
+					tfNomeMae.setText(fichaServidor.getNomeMae());
+				if (fichaServidor.getNomePai() != null)
+					tfNomePai.setText(fichaServidor.getNomePai());
+				if (fichaServidor.getEstadoCivil() != null)
+					cbEstadoCivil.getItems().add(fichaServidor.getEstadoCivil());
+				if (fichaServidor.getSexo() != null)
+					cbSexo.getItems().add(fichaServidor.getSexo());
+
+				Endereco enderecoServidor = servidor.getFicha().getEndereco();
+
+				if (enderecoServidor != null) {
+					if (enderecoServidor.getCidadeNatal() != null)
+						tfNaturalidade.setText(enderecoServidor.getCidadeNatal());
+					if (enderecoServidor.getCep() != null)
+						tfCep.setText(enderecoServidor.getCep());
+					if (enderecoServidor.getCidadeAtual() != null)
+						tfCidade.setText(enderecoServidor.getCidadeAtual());
+					if (enderecoServidor.getBairro() != null)
+						tfBairro.setText(enderecoServidor.getBairro());
+					if (enderecoServidor.getEstado() != null)
+						tfEstado.setText(enderecoServidor.getEstado());
+					if (enderecoServidor.getRua() != null)
+						tfRua.setText(enderecoServidor.getRua());
+					if (enderecoServidor.getNumero() != null)
+						tfNumero.setText(enderecoServidor.getNumero() + "");
+				}
+			}
+
+		}
+		// System.out.println(servidor.toString());
 	}
+
 	public void onActionFechar() {
 		Stage stage = (Stage) btnFechar.getScene().getWindow();
 		stage.close();
-		
+
 	}
 
 }
