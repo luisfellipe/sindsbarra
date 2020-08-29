@@ -11,7 +11,7 @@ import model.Servidor;
 public class TelaVizualizarServidor extends Application {
 
 	private Servidor servidor = null;
-	private String resource = "/fxml/VisualizarServidor.fxml";
+	private String resource = "/fxml/CadastroServidor.fxml";
 	private Parent root;
 	FXMLLoader loader;
 	@Override
