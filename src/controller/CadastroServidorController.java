@@ -6,11 +6,10 @@ import java.util.Set;
 import dao.ConvenioServidor;
 import dao.ServidorDB;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.Initializable;                       
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -25,21 +24,7 @@ public class CadastroServidorController implements Initializable {
 	@FXML
 	private AnchorPane rootLayout;
 
-	@FXML
-	private Label lbNome;
-	@FXML
-	private Label lbCpf;
-	@FXML
-	private Label lbMatricula;
-	@FXML
-	private Label lbDataAdmissao;
-	@FXML
-	private Label lbDataNasc;
-	@FXML
-	private Label lbValor;
-	@FXML
-	private Label lbFuncao;
-
+	
 	@FXML
 	private TextField tfNome;
 	@FXML
@@ -153,17 +138,38 @@ public class CadastroServidorController implements Initializable {
 	/**
 	 * Servidor selecionado na tabela principal
 	 * 
-	 * @param servidor
+	 * @param s
 	 */
-	public void visualizar(Servidor servidor) {
-		tfNome.setText(servidor.getNome());
-		tfCpf.setText(servidor.getCpf());
-		tfFuncao.setText(servidor.getFuncao());
-		tfMatricula.setText(servidor.getMatricula());
+	public void visualizar(Servidor s) {
+		tfNome.setText(s.getNome());
+		tfCpf.setText(s.getCpf());
+		tfFuncao.setText(s.getFuncao());
+		tfMatricula.setText(s.getMatricula());
+		tfDependentes.setText(s.getQtdDependentes()+"");
+		tfRG.setText(s.getRg());
+				
+		Ficha f = s.getFicha();
+		tfNaturalidade.setText(f.getNaturalidade());
+		tfNomeMae.setText(f.getNomeMae());
+		tfNomePai.setText(f.getNomePai());
+		tfTelefone.setText(f.getTelefone());
+		
+		cbEstadoCivil.getItems().add(f.getEstadoCivil());
+		cbSexo.getItems().add(f.getSexo());
+		
+		
+		Endereco e = s.getFicha().getEndereco();
+		tfCep.setText(e.getCep());
+		tfCidade.setText(e.getCidade());
+		tfBairro.setText(e.getBairro());
+		tfEstado.setText(e.getEstado());
+		tfRua.setText(e.getRua());
+		tfNumero.setText(e.getNumero()+"");
+		
 
-		System.out.println(servidor.toString());
-		dataPickerAdmissao.setValue(servidor.getDataAdmissao());
-		dataPickerNasc.setValue(servidor.getDataNasc());
+		//System.out.println(servidor.toString());
+		dataPickerAdmissao.setValue(s.getDataAdmissao());
+		dataPickerNasc.setValue(s.getDataNasc());
 	}
 	public void onActionFechar() {
 		Stage stage = (Stage) btnFechar.getScene().getWindow();
