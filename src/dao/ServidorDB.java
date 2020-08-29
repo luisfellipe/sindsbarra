@@ -119,29 +119,29 @@ public class ServidorDB {
 
 	public Ficha selectFicha(long codigoServidor) {
 		String query = "SELEC FROM ficha WHERE codigo_servidor=?;";
-		Ficha f = null;
+		Ficha fichaServidor = null;
 		conn = DriveManager.getConnection();
 
 		try {
 			pstmt = conn.prepareStatement(query);
 			pstmt.setLong(1, codigoServidor);
 			rs = pstmt.executeQuery();
-			f = new Ficha();
-			f.setNomePai(rs.getString("nome_pai"));
-			f.setNomeMae(rs.getString("nome_mae"));
-			f.setSexo(rs.getString("sexo"));
-			f.setNaturalidade(rs.getString("naturalidade"));
-			f.setEstadoCivil(rs.getString("estado_civil"));
-			f.setTelefone(rs.getString("telefone"));
-			Endereco e = new Endereco();
-			e.setEstado(rs.getString(""));
-			e.setCidade(rs.getString(""));
-			e.setCep(rs.getString(""));
-			e.setBairro(rs.getString(""));
-			e.setRua(rs.getString(""));
-			e.setNumero(rs.getInt("numero_rua"));
+			fichaServidor = new Ficha();
+			fichaServidor.setNomePai(rs.getString("nome_pai"));
+			fichaServidor.setNomeMae(rs.getString("nome_mae"));
+			fichaServidor.setSexo(rs.getString("sexo"));
+			fichaServidor.setEstadoCivil(rs.getString("estado_civil"));
+			fichaServidor.setTelefone(rs.getString("telefone"));
+			Endereco enderecoServidor = new Endereco();
+			enderecoServidor.setCidadeNatal(rs.getString("naturalidade"));
+			enderecoServidor.setEstado(rs.getString(""));
+			enderecoServidor.setCidadeAtual(rs.getString(""));
+			enderecoServidor.setCep(rs.getString(""));
+			enderecoServidor.setBairro(rs.getString(""));
+			enderecoServidor.setRua(rs.getString(""));
+			enderecoServidor.setNumero(rs.getInt("numero_rua"));
 
-			f.setEndereco(e);
+			fichaServidor.setEndereco(enderecoServidor);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -149,34 +149,32 @@ public class ServidorDB {
 		}
 		DriveManager.close();
 
-		return f;
+		return fichaServidor;
 	}
 
-	private void saveFicha(Servidor s) {
+	private void saveFicha(Servidor servidor) {
 
 		String saveFichaServidor = "INSERT INTO ficha (codigo_servidor, nome_pai, nome_mae,"
-				+ "sexo, naturalidade, estado_civil, telefone, estado, cidade, cep, bairro, rua, numero_rua)"
+				+ "sexo, cidade_natal, estado_civil, telefone, estado, cidade_atual, cep, bairro, rua, numero_rua)"
 				+ "values(?, ?, ?, ?, ?,?, ?, ?, ?, ?,?, ?, ?);";
 		conn = DriveManager.getConnection();
 
 		try {
 			pstmt = conn.prepareStatement(saveFichaServidor);
-			Ficha f = s.getFicha();
+			Ficha fichaServidor = servidor.getFicha();
 
-			pstmt.setString(1, s.getCpf());
-			pstmt.setString(2, f.getNomePai());
-			pstmt.setString(3, f.getNomeMae());
-			pstmt.setString(4, f.getSexo());
-			pstmt.setString(5, f.getNaturalidade());
-			pstmt.setString(6, f.getEstadoCivil());
-			pstmt.setString(7, f.getTelefone());
-
-			pstmt.setString(8, f.getEndereco().getEstado());
-			pstmt.setString(9, f.getEndereco().getCidade());
-			pstmt.setString(10, f.getEndereco().getCep());
-			pstmt.setString(11, f.getEndereco().getBairro());
-			pstmt.setString(12, f.getEndereco().getRua());
-			pstmt.setInt(13, f.getEndereco().getNumero());
+			pstmt.setString(1, fichaServidor.getNomePai());
+			pstmt.setString(2, fichaServidor.getNomeMae());
+			pstmt.setString(3, fichaServidor.getSexo());
+			pstmt.setString(4, fichaServidor.getEndereco().getCidadeNatal());
+			pstmt.setString(5, fichaServidor.getEstadoCivil());
+			pstmt.setString(6, fichaServidor.getTelefone());
+			pstmt.setString(7, fichaServidor.getEndereco().getEstado());
+			pstmt.setString(8, fichaServidor.getEndereco().getCidadeAtual());
+			pstmt.setString(9, fichaServidor.getEndereco().getCep());
+			pstmt.setString(10, fichaServidor.getEndereco().getBairro());
+			pstmt.setString(11, fichaServidor.getEndereco().getRua());
+			pstmt.setInt(12, fichaServidor.getEndereco().getNumero());
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
