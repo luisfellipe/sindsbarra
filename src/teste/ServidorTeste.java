@@ -29,13 +29,13 @@ public class ServidorTeste {
 		e.setBairro("Santa catarina");
 		e.setCep("34978-555");
 		e.setCidadeAtual("São Paulo");
+		e.setCidadeNatal("Passos MG");
 		e.setEstado("SP");
 		e.setNumero(45);
 		e.setRua("Rua das maravilhas");
 		Ficha f = new Ficha();
 		f.setEndereco(e);
 		f.setEstadoCivil("Casado(a)");
-		f.setNaturalidade("Brasil");
 		f.setTelefone("(68) 9 8856-8989");
 		f.setSexo("Masculino");
 		f.setNomeMae("Nely Alves Soares");

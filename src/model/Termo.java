@@ -21,7 +21,7 @@ public class Termo {
 		case "$ANO":
 			return servidor.getDataNasc().getYear()+"";
 		case "$NATUR":
-			return fs.getNaturalidade();
+			return fs.getEndereco().getCidadeNatal();
 		case "$DNASC":
 			return new Data().getStringDate(servidor.getDataNasc());
 		case "$CPF":
