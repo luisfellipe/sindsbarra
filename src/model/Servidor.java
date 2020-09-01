@@ -1,19 +1,12 @@
 package model;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-
-import dao.ConvenioDB;
-import dao.ConvenioServidor;
-import dao.ServidorDB;
 
 public class Servidor extends Pessoa {
 	private String funcao, matricula;
 	private LocalDate dataAdmissao;
 	private Ficha fi;
 	private Integer qtdDependentes;
-	private Set<ConvenioServidor> convenios;
 	
 	public Servidor() {
 		qtdDependentes = 0;
@@ -21,7 +14,6 @@ public class Servidor extends Pessoa {
 		matricula = null;
 		dataAdmissao = null;
 		fi = null;
-		convenios = null;
 	}
 	
 	/**
@@ -78,50 +70,6 @@ public class Servidor extends Pessoa {
 	 */
 	public void setQtdDependentes(Integer qtdDependentes) {
 		this.qtdDependentes = qtdDependentes;
-	}
-
-	/**
-	 * @param Convenio
-	 */
-	public void setConvenio(ConvenioServidor cs) {
-		if (convenios != null) {
-			convenios = new ServidorDB().getAllConvenios(this);
-		} else {
-			convenios = new HashSet<ConvenioServidor>();
-		}
-		convenios.add(cs);
-		new ServidorDB().saveConvenio(cs, this);
-	}
-
-	/**
-	 * @return Convenio
-	 */
-	public ConvenioServidor getConvenio(int codConv) {
-		int qtd = 0;
-		Convenio c = new Convenio();
-		c = new ConvenioDB().select(codConv);
-		ConvenioServidor cs = new ConvenioServidor(qtd);
-
-		return cs;
-	}
-
-	/**
-	 * @return lista de Convenios
-	 */
-	public Set<ConvenioServidor> getConvenios() {
-		if (convenios == null) {
-			convenios = new ServidorDB().getAllConvenios(this);
-		}
-		return convenios;
-	}
-
-	public void setConvenios(Set<ConvenioServidor> convenios) {
-		if (convenios != null) {
-			convenios.addAll(convenios);
-		} else {
-			convenios = new HashSet<ConvenioServidor>();
-		}
-		new ServidorDB().saveConvenios(convenios, this);
 	}
 
 	@Override

@@ -9,14 +9,12 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="rootLayout" fx:id="rootLayout" prefHeight="711.0" prefWidth="1300.0" styleClass="rootLayout" stylesheets="@../css/application.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TelaPrincipalController">
+<AnchorPane id="rootLayout" fx:id="rootLayout" prefHeight="702.0" prefWidth="1300.0" styleClass="rootLayout" stylesheets="@../css/application.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TelaPrincipalController">
 	<children>
-		<TableView id="tabela" fx:id="tabela" editable="true" layoutX="22.0" layoutY="94.0" minHeight="251.0" minWidth="855.0" prefHeight="579.0" prefWidth="1026.0">
+		<TableView id="tabela" fx:id="tabela" editable="true" layoutX="22.0" layoutY="76.0" minHeight="251.0" minWidth="855.0" prefHeight="580.0" prefWidth="1262.0">
 			<columns>
 				<TableColumn id="matriculaColuna" fx:id="matriculaColuna" maxWidth="100.0" minWidth="-1.0" prefWidth="100.0" text="Matricula" />
 				<TableColumn id="nomeColuna" fx:id="nomeColuna" maxWidth="300.0" minWidth="-1.0" prefWidth="300.0" text="Nome" />
@@ -48,8 +46,8 @@
 
 
 		</TableView>
-		<TextField id="tfPesquisar" fx:id="tfPesquisar" layoutX="22.0" layoutY="48.0" onAction="#pesquisar" prefHeight="26.0" prefWidth="390.0" promptText="ex. nome, cpf, matricula, funcao" />
-		<Button id="btnPesquisar" fx:id="btnPesquisar" layoutX="412.0" layoutY="47.0" mnemonicParsing="false" onAction="#pesquisar" prefHeight="18.0" prefWidth="89.0" styleClass="btnPesquisar" stylesheets="@../css/application.css" text="Procurar" textFill="#fcfafa" textOverrun="WORD_ELLIPSIS">
+		<TextField id="tfPesquisar" fx:id="tfPesquisar" layoutX="22.0" layoutY="31.0" onAction="#pesquisar" prefHeight="26.0" prefWidth="390.0" promptText="ex. nome, cpf, matricula, funcao" />
+		<Button id="btnPesquisar" fx:id="btnPesquisar" layoutX="412.0" layoutY="30.0" mnemonicParsing="false" onAction="#pesquisar" prefHeight="18.0" prefWidth="89.0" styleClass="btnPesquisar" stylesheets="@../css/application.css" text="Procurar" textFill="#fcfafa" textOverrun="WORD_ELLIPSIS">
 			<cursor>
 				<Cursor fx:constant="OPEN_HAND" />
 			</cursor>
@@ -57,12 +55,7 @@
 				<Font name="System Bold" size="14.0" />
 			</font>
 		</Button>
-		<Button id="btnFechar" layoutX="1124.0" layoutY="638.0" mnemonicParsing="false" onAction="#fecharTelaPrincipal" prefHeight="35.0" prefWidth="132.0" stylesheets="@../css/application.css" text="Fechar">
-			<font>
-				<Font name="System Bold" size="14.0" />
-			</font>
-		</Button>
-		<MenuButton id="mBtnConvenios" fx:id="mbConvenios" layoutX="584.0" layoutY="47.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="132.0" text="Convênios">
+		<MenuButton id="mBtnConvenios" fx:id="mbConvenios" layoutX="584.0" layoutY="30.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="132.0" text="Convênios">
 			<items>
 				<MenuItem mnemonicParsing="false" text="Todos" />
 			</items>
@@ -70,25 +63,5 @@
 				<Font name="System Bold" size="14.0" />
 			</font>
 		</MenuButton>
-      <Button id="btnAnterior" layoutX="1124.0" layoutY="469.0" mnemonicParsing="false" onAction="#onActionAnterior" prefHeight="35.0" prefWidth="132.0" text="&lt;&lt; Anterior">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font>
-      </Button>
-      <Button id="btnProximo" layoutX="1128.0" layoutY="542.0" mnemonicParsing="false" onAction="#onActionProximo" prefHeight="35.0" prefWidth="124.0" text="Proximo &gt;&gt;">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font>
-      </Button>
-      <Button id="btnAtualizar" layoutX="778.0" layoutY="47.0" mnemonicParsing="false" onAction="#onActionAtualizar" prefHeight="28.0" prefWidth="155.0" text="Atualizar Tabela">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font>
-      </Button>
-      <ImageView fitHeight="157.0" fitWidth="221.0" layoutX="1069.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../img/logo.png" />
-         </image>
-      </ImageView>
 	</children>
 </AnchorPane>

@@ -1,117 +1,145 @@
 package controller;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Set;
-import dao.ConvenioServidor;
 import dao.ServidorDB;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Servidor;
-import view.TelaConvenio;
+import view.TelaConvenioServidor;
+import model.Convenio;
 import model.Endereco;
 import model.Ficha;
 
-public class CadastroServidorController implements Initializable {
+public class CadastroServidorController implements Initializable { 
 
-	private Servidor servidor = null;
 	@FXML
 	private AnchorPane rootLayout;
-
 	@FXML
-	private TextField tfNome;
+	private Label lbSexo, lbDataAdmissao, lbNome, lbFuncao, lbTelefone, lbCpf, lbRG, lbMatricula, lbEstadoCivil,
+			lbDataNasc, lbDependentes, lbNomeMae, lbNomePai, lbCidadeNatal, lbCidadeAtual, lbBairro, lbRua, lbCep,
+			lbNumeroRua, lbEstado;
 	@FXML
-	private TextField tfCpf;
+	private TextField tfNome, tfCpf, tfRG, tfMatricula, tfDependentes, tfFuncao, tfTelefone, tfNomeMae, tfNomePai,
+			tfCidadeNatal, tfCidadeAtual, tfBairro, tfRua, tfCep, tfNumero, tfEstado;
 	@FXML
-	private TextField tfRG;
+	private DatePicker dataPickerAdmissao, dataPickerNasc;
 	@FXML
-	private TextField tfMatricula;
-	@FXML
-	private TextField tfDependentes;
-	@FXML
-	private TextField tfFuncao;
-	@FXML
-	private TextField tfTelefone;
-	@FXML
-	private TextField tfNomeMae;
-	@FXML
-	private TextField tfNomePai;
-	@FXML
-	private TextField tfNaturalidade;
-	@FXML
-	private TextField tfCidade;
-	@FXML
-	private TextField tfBairro;
-	@FXML
-	private TextField tfRua;
-	@FXML
-	private TextField tfCep;
-	@FXML
-	private TextField tfNumero;
-	@FXML
-	private TextField tfEstado;
-
-	@FXML
-	private DatePicker dataPickerAdmissao;
-	@FXML
-	private DatePicker dataPickerNasc;
-	@FXML
-	private ChoiceBox<String> cbEstadoCivil;
-	@FXML
-	private ChoiceBox<String> cbSexo;
+	private ChoiceBox<String> cbEstadoCivil, cbSexo;
 	@FXML
 	private Button btnFechar;
+	@FXML
+	private Button btnSalvar;
+	private ObservableList<Servidor> dadosDaTabela = null;
+	private Servidor servidor = null;
+	private boolean update = false;
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-		cbEstadoCivil.getItems().addAll("Casado(a)", "Solteiro(a)", "Divorciado(a)");
-		cbSexo.getItems().addAll("Masculino", "Feminino");
+		
 
 	}
 
 	/*
 	 * Adiciona servidor no banco de dados
 	 */
+	@SuppressWarnings("unchecked")
 	@FXML
 	private void adicionarServidor() {
-		Servidor servidor = new Servidor();
-		Ficha fi = new Ficha();
+		TextField tfNode = null;
+		DatePicker dpNode = null;
+		ChoiceBox<String> cbNode = null;
+		Alert a = new Alert(AlertType.CONFIRMATION);
+		a.setTitle("Campos Vazios!");
+		a.setHeaderText("Um ou mais campos podem estar vazios!");
+		a.setContentText("Tenha certeza que todos os campos estão preenchidos!");
+		a.getButtonTypes().clear();
+		ButtonType btntComfirmar = new ButtonType("comfirmar");
+		a.getButtonTypes().add(btntComfirmar);
+
+		for (Node node : rootLayout.getChildren()) {
+			if (node instanceof TextField) {
+				tfNode = (TextField) node;
+				if (tfNode.getText() == "") {
+					a.show();
+					return;
+
+				}
+			} else if (node instanceof DatePicker) {
+				dpNode = (DatePicker) node;
+				if (dpNode.getValue() == null) {
+					a.show();
+					return;
+				}
+			} else if (node instanceof ChoiceBox) {
+				cbNode = (ChoiceBox<String>) node;
+				if (dpNode.getValue() == null) {
+					a.show();
+					return;
+				}
+			}
+		}
+		Ficha ficha = null;
+		Endereco endereco = null;
+		if(servidor == null) {
+			servidor = new Servidor();
+			ficha = new Ficha();
+			endereco = new Endereco();
+		}else {
+			ficha = servidor.getFicha();
+			endereco = ficha.getEndereco();
+		}
+		
 		servidor.setNome(tfNome.getText());
 		servidor.setFuncao(tfFuncao.getText());
 		servidor.setCpf(tfCpf.getText());
 		servidor.setRG(tfRG.getText());
 		servidor.setMatricula(tfMatricula.getText());
-		servidor.setQtdDependentes(Integer.parseInt(tfDependentes.getText()));
+		servidor.setQtdDependentes(Integer.parseInt("0" + tfDependentes.getText()));
 		servidor.setDataNasc(dataPickerNasc.getValue());
 		servidor.setDataAdmissao(dataPickerAdmissao.getValue());
 
-		fi.setTelefone(tfTelefone.getText());
-		fi.setEstadoCivil(cbEstadoCivil.getSelectionModel().getSelectedItem());
-		fi.setSexo(cbSexo.getSelectionModel().getSelectedItem());
-		fi.setNomePai(tfNomePai.getText());
-		fi.setNomeMae(tfNomeMae.getText());
+		ficha.setTelefone(tfTelefone.getText());
+		ficha.setEstadoCivil(cbEstadoCivil.getSelectionModel().getSelectedItem());
+		ficha.setSexo(cbSexo.getSelectionModel().getSelectedItem());
+		ficha.setNomePai(tfNomePai.getText());
+		ficha.setNomeMae(tfNomeMae.getText());
 
-		// Endereco
-		Endereco endereco = new Endereco();
-		endereco.setCidadeNatal(tfNaturalidade.getText());
+		endereco.setCidadeNatal(tfCidadeNatal.getText());
 		endereco.setRua(tfRua.getText());
-		endereco.setNumero(Integer.parseInt(tfNumero.getText()));
+		endereco.setNumero(Integer.parseInt("0" + tfNumero.getText()));
 		endereco.setBairro(tfBairro.getText());
 		endereco.setCep(tfCep.getText());
-		endereco.setCidadeAtual(tfCidade.getText());
+		endereco.setCidadeAtual(tfCidadeAtual.getText());
 		endereco.setEstado(tfEstado.getText());
 
-		fi.setEndereco(endereco);
-		servidor.setFicha(fi);
+		ficha.setEndereco(endereco);
+		servidor.setFicha(ficha); 
 
-		// salva servidor no banco de dados
-		new ServidorDB().saveServidor(servidor);
+		/*
+		 * Atualiza ou adiciona um novo servidor
+		 */
+		if (update) {
+			new ServidorDB().updateServidor(servidor);
+		} else {
+			new ServidorDB().saveServidor(servidor);// salva servidor no banco de dados
+		}
+		if (dadosDaTabela != null) {
+			dadosDaTabela.add(servidor);
+		}
 
 	}
 
@@ -123,11 +151,11 @@ public class CadastroServidorController implements Initializable {
 	@FXML
 	private void exibirConvenios() {
 		if (servidor != null) {
-			Set<ConvenioServidor> convenios = new ServidorDB().getAllConvenios(servidor);
-			TelaConvenio tc = new TelaConvenio();
-			tc.setConveniosServidor(convenios);
+			List<Convenio> convenios = new ServidorDB().getAllConvenios(servidor);
+			TelaConvenioServidor tcs = new TelaConvenioServidor();
+			tcs.setConvenios(convenios);
 			Stage stage = new Stage();
-			tc.start(stage);
+			tcs.start(stage);
 		}
 	}
 
@@ -136,7 +164,9 @@ public class CadastroServidorController implements Initializable {
 	 * 
 	 * @param servidor
 	 */
-	public void visualizar(Servidor servidor) {
+	public void setServidor(Servidor servidor) {
+		dadosDaTabela.remove(servidor);
+		this.servidor = servidor;
 		{
 			if (servidor.getNome() != null)
 				tfNome.setText(servidor.getNome());
@@ -171,11 +201,11 @@ public class CadastroServidorController implements Initializable {
 
 				if (enderecoServidor != null) {
 					if (enderecoServidor.getCidadeNatal() != null)
-						tfNaturalidade.setText(enderecoServidor.getCidadeNatal());
+						tfCidadeNatal.setText(enderecoServidor.getCidadeNatal());
 					if (enderecoServidor.getCep() != null)
 						tfCep.setText(enderecoServidor.getCep());
 					if (enderecoServidor.getCidadeAtual() != null)
-						tfCidade.setText(enderecoServidor.getCidadeAtual());
+						tfCidadeAtual.setText(enderecoServidor.getCidadeAtual());
 					if (enderecoServidor.getBairro() != null)
 						tfBairro.setText(enderecoServidor.getBairro());
 					if (enderecoServidor.getEstado() != null)
@@ -188,12 +218,19 @@ public class CadastroServidorController implements Initializable {
 			}
 
 		}
+		btnSalvar.setText("Atualizar");//altera titulo do button Salvar -> Atualizar
+		this.update = true;
 		// System.out.println(servidor.toString());
 	}
 
 	public void onActionFechar() {
 		Stage stage = (Stage) btnFechar.getScene().getWindow();
 		stage.close();
+
+	}
+
+	public void addObservableList(ObservableList<Servidor> dadosDaTabela) {
+		this.dadosDaTabela = dadosDaTabela;
 
 	}
 

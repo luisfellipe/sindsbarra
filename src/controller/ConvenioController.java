@@ -2,10 +2,9 @@ package controller;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Set;
 
-import dao.ConvenioServidor;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -56,7 +55,7 @@ public class ConvenioController implements Initializable{
 		
 	}
 
-	public void visualizar(Set<ConvenioServidor> setConvenios) {
+	public void visualizar(List<Convenio> setConvenios) {
 		dadosDaTabela = FXCollections.observableArrayList();
 		dadosDaTabela.addAll(setConvenios);
 		

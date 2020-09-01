@@ -4,10 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 import model.Servidor;
 import model.Convenio;
@@ -21,7 +25,7 @@ public class ServidorDB {
 	private ResultSet rs = null;
 
 	/*
-	 * Salva servidor no banco de dados 
+	 * Salva servidor no banco de dados
 	 */
 	public void saveServidor(Servidor s) {
 		String saveServidor = "INSERT INTO servidor (nome, cpf, rg, matricula,funcao, dependentes,data_admissao, data_nasc)"
@@ -47,10 +51,10 @@ public class ServidorDB {
 				saveFicha(s);// salva a ficha de cadastro do servidor
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			DriveManager.close();
 			e.printStackTrace();
 		}
-
+		DriveManager.close();
 	}
 
 	/*
@@ -79,7 +83,7 @@ public class ServidorDB {
 			s.setMatricula(rs.getString("matricula"));
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			DriveManager.close();
 			e.printStackTrace();
 		}
 		// fecha conexão com o banco de dados
@@ -92,33 +96,128 @@ public class ServidorDB {
 	 * Ao deletar servidor deve-se também deletar a ficha cadastrada
 	 */
 	public int deleteServidor(Servidor servidor) {
-		String query = "DELETE f, s FROM ficha AS f JOIN servidor AS s WHERE f.codigo_servidor=s.cpf AND s.cpf=?;";
-		conn = DriveManager.getConnection();
-		int rowsDeleted = 0;
-		try {
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, servidor.getCpf());
+		String cpf = servidor.getCpf();
 
-			rowsDeleted = pstmt.executeUpdate();
+		/*
+		 * recupera buffer de segurança temporário dos convenios associados ao servidor
+		 */
+		List<Convenio> cache = getAllConvenios(servidor);
 
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (deleteConvenioServidor(cpf)) {// remove os convenios-servidor do bd
+
+			if (deleteFicha(cpf)) {// remove a ficha-servidor do bd
+				/*
+				 * Deleta servidor do bd
+				 */
+				String query = "DELETE FROM servidor WHERE cpf=?";
+
+				conn = DriveManager.getConnection();
+				int rowsDeleted = 0;
+				try {
+					pstmt = conn.prepareStatement(query);
+					pstmt.setString(1, cpf);
+					rowsDeleted = pstmt.executeUpdate();
+					if (rowsDeleted > 0) {
+						Alert a = new Alert(AlertType.CONFIRMATION);
+						a.setHeaderText("Servidor deletado!");
+					}
+
+				} catch (SQLException e) {
+					{
+						saveServidor(servidor);
+						saveFicha(servidor);
+						for (Convenio c : cache) {
+							saveConvenio(c, servidor);
+						}
+					}
+
+					e.printStackTrace();
+				}
+				DriveManager.close();
+				return rowsDeleted;
+			} else {
+				for (Convenio c : cache) {
+					saveConvenio(c, servidor);
+				}
+				Alert a = new Alert(AlertType.ERROR);
+				a.setHeaderText("Falha ao tentar deletar servidor: " + servidor.getCpf());
+				a.show();
+			}
+		} else {
+			Alert a = new Alert(AlertType.ERROR);
+			a.setHeaderText("Falha ao tentar deletar servidor: " + servidor.getCpf());
+			a.show();
 		}
 		DriveManager.close();
-		return rowsDeleted;
+
+		return 0;
 	}
 
 	/*
 	 * Atualiza servidor no bd
 	 */
-	public void updateServidor(Servidor servidor) {
-		this.deleteServidor(servidor);
-		this.saveServidor(servidor);
+	public boolean updateServidor(Servidor servidor) {
+		String query = "UPDATE servidor SET nome=?, cpf=?, rg=?, matricula=?, funcao=?, dependentes=?, data_admissao=?, data_nasc=? WHERE cpf=?";
+		conn = DriveManager.getConnection();
+		try {
+			if (servidor.getFicha() != null) {
+				updateFicha(servidor);
+			}
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, servidor.getNome());
+			pstmt.setString(2, servidor.getCpf());
+			pstmt.setString(3, servidor.getRg());
+			pstmt.setString(4, servidor.getMatricula());
+			pstmt.setString(5, servidor.getFuncao());
+			pstmt.setInt(6, servidor.getQtdDependentes());
+			Data dataManager = new Data();
+			pstmt.setDate(7, dataManager.getDate(servidor.getDataAdmissao()));
+			pstmt.setDate(8, dataManager.getDate(servidor.getDataNasc()));
+			pstmt.setString(9, servidor.getCpf());
+
+		} catch (SQLException e) {
+			DriveManager.close();
+			e.printStackTrace();
+			return false;
+		}
+		DriveManager.close();
+		return true;
+
+	}
+
+	/*
+	 * atualiza ficha do servidor no bd
+	 */
+	private void updateFicha(Servidor servidor) {
+		String updateFichaServidor = "UPDATE ficha SET codigo_servidor=?, nome_pai=?, nome_mae=?, sexo=?, cidade_natal=?, estado_civil=?, telefone=?, estado=?, cidade_atual=?, cep=?, bairro=?, rua=?, numero_rua=? WHERE codigo_servidor=?";
+		conn = DriveManager.getConnection();
+		try {
+			pstmt = conn.prepareStatement(updateFichaServidor);
+			Ficha fichaServidor = servidor.getFicha();
+
+			pstmt.setString(1, servidor.getCpf());
+			pstmt.setString(2, fichaServidor.getNomePai());
+			pstmt.setString(3, fichaServidor.getNomeMae());
+			pstmt.setString(4, fichaServidor.getSexo());
+			pstmt.setString(5, fichaServidor.getEndereco().getCidadeNatal());
+			pstmt.setString(6, fichaServidor.getEstadoCivil());
+			pstmt.setString(7, fichaServidor.getTelefone());
+			pstmt.setString(8, fichaServidor.getEndereco().getEstado());
+			pstmt.setString(9, fichaServidor.getEndereco().getCidadeAtual());
+			pstmt.setString(10, fichaServidor.getEndereco().getCep());
+			pstmt.setString(11, fichaServidor.getEndereco().getBairro());
+			pstmt.setString(12, fichaServidor.getEndereco().getRua());
+			pstmt.setInt(13, fichaServidor.getEndereco().getNumero());
+			pstmt.setString(14, servidor.getCpf());
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Ficha selectFicha(long codigoServidor) {
-		String query = "SELEC FROM ficha WHERE codigo_servidor=?;";
+		String query = "SELEC FROM ficha WHERE " + codigoServidor + "=codigo_servidor;";
 		Ficha fichaServidor = null;
 		conn = DriveManager.getConnection();
 
@@ -156,32 +255,62 @@ public class ServidorDB {
 
 		String saveFichaServidor = "INSERT INTO ficha (codigo_servidor, nome_pai, nome_mae,"
 				+ "sexo, cidade_natal, estado_civil, telefone, estado, cidade_atual, cep, bairro, rua, numero_rua)"
-				+ "values(?, ?, ?, ?, ?,?, ?, ?, ?, ?,?, ?, ?);";
+				+ "values(?, ?, ?, ?, ?,?, ?, ?, ?, ?,?, ?,?);";
 		conn = DriveManager.getConnection();
 
 		try {
 			pstmt = conn.prepareStatement(saveFichaServidor);
 			Ficha fichaServidor = servidor.getFicha();
 
-			pstmt.setString(1, fichaServidor.getNomePai());
-			pstmt.setString(2, fichaServidor.getNomeMae());
-			pstmt.setString(3, fichaServidor.getSexo());
-			pstmt.setString(4, fichaServidor.getEndereco().getCidadeNatal());
-			pstmt.setString(5, fichaServidor.getEstadoCivil());
-			pstmt.setString(6, fichaServidor.getTelefone());
-			pstmt.setString(7, fichaServidor.getEndereco().getEstado());
-			pstmt.setString(8, fichaServidor.getEndereco().getCidadeAtual());
-			pstmt.setString(9, fichaServidor.getEndereco().getCep());
-			pstmt.setString(10, fichaServidor.getEndereco().getBairro());
-			pstmt.setString(11, fichaServidor.getEndereco().getRua());
-			pstmt.setInt(12, fichaServidor.getEndereco().getNumero());
+			pstmt.setString(1, servidor.getCpf());
+			pstmt.setString(2, fichaServidor.getNomePai());
+			pstmt.setString(3, fichaServidor.getNomeMae());
+			pstmt.setString(4, fichaServidor.getSexo());
+			pstmt.setString(5, fichaServidor.getEndereco().getCidadeNatal());
+			pstmt.setString(6, fichaServidor.getEstadoCivil());
+			pstmt.setString(7, fichaServidor.getTelefone());
+			pstmt.setString(8, fichaServidor.getEndereco().getEstado());
+			pstmt.setString(9, fichaServidor.getEndereco().getCidadeAtual());
+			pstmt.setString(10, fichaServidor.getEndereco().getCep());
+			pstmt.setString(11, fichaServidor.getEndereco().getBairro());
+			pstmt.setString(12, fichaServidor.getEndereco().getRua());
+			pstmt.setInt(13, fichaServidor.getEndereco().getNumero());
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		DriveManager.close();
+	}
+
+	private boolean deleteFicha(String codigoServidor) {
+		String query = "DELETE FROM ficha WHERE codigo_servidor=?;";
+		conn = DriveManager.getConnection();
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, codigoServidor);
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	private boolean deleteConvenioServidor(String codigoServidor) {
+		String query = "Delete FROM convenio_servidor WHERE codigo_servidor=?;";
+		conn = DriveManager.getConnection();
+
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, codigoServidor);
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	/*
@@ -230,26 +359,26 @@ public class ServidorDB {
 		return servidores;
 	}
 
-	public void saveConvenio(ConvenioServidor cs, Servidor s) {
+	public void saveConvenio(Convenio convenio, Servidor servidor) {
 		String query1 = "INSERT INTO convenio_servidor (codigo_servidor, codigo_convenio, dependentes,data_adesao)"
 				+ "values(?, ?, ?, ?);";
-		String query2 = "SELECT c.codigo, s.codigo FROM convenio AS c JOIN servidor s ON c.nome=? AND s.nome=?);";
+		String query2 = "SELECT codigo FROM convenio WHERE nome=?;";
+
 		conn = DriveManager.getConnection();
-		int codigo_servidor = 0, codigo_convenio = 0;
+		String codigo_servidor = servidor.getCpf();
+		int codigo_convenio = 0;
 
 		try {
 			pstmt = conn.prepareStatement(query2);
-			pstmt.setString(1, cs.getNome());
-			pstmt.setString(2, s.getNome());
+			pstmt.setString(1, convenio.getNome());
 			rs = pstmt.executeQuery();
-			codigo_servidor = rs.getInt(1);
-			codigo_convenio = rs.getInt(2);
+			codigo_convenio = rs.getInt("codigo");
 
 			pstmt.clearBatch();
 			pstmt = conn.prepareStatement(query1);
-			pstmt.setInt(1, codigo_servidor);
+			pstmt.setString(1, codigo_servidor);
 			pstmt.setInt(1, codigo_convenio);
-			pstmt.setInt(3, cs.getDependente());
+			pstmt.setInt(3, servidor.getQtdDependentes());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -258,37 +387,43 @@ public class ServidorDB {
 
 	}
 
-	public void saveConvenios(Set<ConvenioServidor> convenios, Servidor s) {
-		for (ConvenioServidor cs : convenios) {
-			this.saveConvenio(cs, s);
+	public void saveConvenios(List<Convenio> convenios, Servidor s) {
+		for (Convenio c : convenios) {
+			this.saveConvenio(c, s);
 		}
 	}
 
-	public Set<ConvenioServidor> getAllConvenios(Servidor servidor) {
-		String query = "SELECT c.nome,c.data_adesao,c.descricao, cs.dependentes, c.valor FROM (convenio AS c LEFT JOIN "
-				+ "servidor AS s,convenio_servidor as cs) ON cs.codigo_servidor=s.codigo AND "
-				+ "cs.codigo_convenio=c.codigo;";
+	/*
+	 * recupera todos os convenios relacionados ao servidor
+	 */
+	public List<Convenio> getAllConvenios(Servidor servidor) {
+		/*
+		 * primeiro é efetuada uma busca dos codigos dos convenios do servidor após é
+		 * efetuada a busca dos convenios em si
+		 */
+		String query1 = "SELECT codigo_convenio FROM convenio_servidor WHERE  codigo_servidor=?;";
 		conn = DriveManager.getConnection();
-		Set<ConvenioServidor> convenios = null;
+		List<Convenio> convenios = null;
+		List<Integer> codigos_convenio = new ArrayList<Integer>();
 
 		try {
-			pstmt = conn.prepareStatement(query);
+			pstmt = conn.prepareStatement(query1);
 			rs = pstmt.executeQuery();
-			convenios = new HashSet<ConvenioServidor>();
-			Convenio c = null;
 			while (rs.next()) {
-				c = new Convenio();
-				c.setNome(rs.getString(1));
-				c.setDataAdesao(new Data().getLocalDate(rs.getDate(2)));
-				c.setDescricao(rs.getString(3));
-				c.setValor(Float.parseFloat(rs.getString(1)));
-				c.setDescricao(rs.getString(1));
+				codigos_convenio.add(rs.getInt("codigo_convenio"));
 			}
+
+			convenios = new ArrayList<Convenio>();
+			ConvenioDB cb = new ConvenioDB();
+			for (Integer codigo : codigos_convenio) {
+				convenios.add(cb.select(codigo));
+			}
+
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			DriveManager.close();
 			e.printStackTrace();
 		}
-		servidor.setConvenios(convenios);
+		DriveManager.close();
 		return convenios;
 	}
 

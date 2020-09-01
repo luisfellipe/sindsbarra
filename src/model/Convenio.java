@@ -2,6 +2,7 @@ package model;
 
 import java.time.LocalDate;
 
+
 public class Convenio {
 	private String nomeConvenio, descricao;
 	private LocalDate dataAdesao;
