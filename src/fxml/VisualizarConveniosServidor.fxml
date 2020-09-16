@@ -8,13 +8,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="522.0" prefWidth="744.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="902.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ServidorConvenioController">
    <children>
-      <TableView fx:id="tabelaConvenio" layoutX="10.0" layoutY="78.0" prefHeight="407.0" prefWidth="721.0">
+      <TableView fx:id="tabelaConvenio" layoutX="14.0" layoutY="116.0" prefHeight="407.0" prefWidth="872.0">
         <columns>
           <TableColumn fx:id="nomeColuna" prefWidth="468.0" text="Nome" />
             <TableColumn fx:id="valorColuna" prefWidth="113.0" text="Valor" />
-          <TableColumn fx:id="colunaValorAdesao" prefWidth="157.0" text="Data Adesao" />
+          <TableColumn fx:id="colunaValorAdesao" prefWidth="142.0" text="Data Adesao" />
         </columns>
          <contextMenu>
             <ContextMenu>
@@ -25,9 +25,14 @@
             </ContextMenu>
          </contextMenu>
       </TableView>
-      <Label layoutX="290.0" layoutY="14.0" text="Convenios" textFill="RED">
+      <Label layoutX="290.0" layoutY="14.0" text="Convenios " textFill="RED">
          <font>
             <Font name="System Bold" size="32.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbNomeServidor" layoutX="24.0" layoutY="72.0" text=". . .">
+         <font>
+            <Font size="16.0" />
          </font>
       </Label>
    </children>
