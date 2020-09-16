@@ -16,6 +16,7 @@ public class TelaCadastroServidor extends Application {
 
 	private String resource = "/fxml/CadastroServidor.fxml";
 	private ObservableList<Servidor> dadosDaTabela = null; 
+	private Servidor servidor = null;
 	private Parent root;
 	FXMLLoader loader;
 	@Override
@@ -26,7 +27,11 @@ public class TelaCadastroServidor extends Application {
 			 
 			 if(dadosDaTabela != null) {
 				 CadastroServidorController controller = (CadastroServidorController) loader.getController();
-				 controller.addObservableList(dadosDaTabela);
+				 if(servidor != null) {
+					 controller.setServidor(dadosDaTabela, servidor);
+				 }else {
+					 controller.addObservableList(dadosDaTabela);
+				 }
 			 }
 			stage.setTitle("SINDISBARRA");
 			stage.setScene(new Scene(root));
@@ -41,5 +46,9 @@ public class TelaCadastroServidor extends Application {
 	}
 	public void addObservableList(ObservableList<Servidor> dadosDaTabela) {
 		this.dadosDaTabela = dadosDaTabela;
+	}
+	public void setServidor(ObservableList<Servidor> dadosDaTabela, Servidor servidor) {
+		this.dadosDaTabela = dadosDaTabela;
+		this.servidor = servidor;
 	}
 }

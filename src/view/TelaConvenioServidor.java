@@ -15,16 +15,16 @@ public class TelaConvenioServidor extends Application {
 	FXMLLoader loader = null;
 	private String resource = "/fxml/VisualizarConvenios.fxml";
 
-	List<Convenio> setConvenios = null;
+	List<Convenio> convenios = null;
  
 	@Override
 	public void start(Stage stage) {
 		try {
 			loader = new FXMLLoader(getClass().getResource(resource));
 			rootLayout = (Parent) loader.load();
-			if (setConvenios != null) {
+			if (convenios != null) {
 				ConvenioController controller = (ConvenioController) loader.getController();
-				controller.visualizar(setConvenios);
+				controller.visualizar(convenios);
 			}
 			Scene scene = new Scene(rootLayout);
 			stage.setScene(scene);
@@ -40,7 +40,7 @@ public class TelaConvenioServidor extends Application {
 	}
 
 	public void setConvenios(List<Convenio> convenios) {
-		this.setConvenios = convenios;
+		this.convenios = convenios;
 	}
  
 }
