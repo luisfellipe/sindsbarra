@@ -75,7 +75,7 @@ public class ConvenioDB {
 		String query = "UPDATE convenio SET WHERE codigo=?";
 	}
 
-	public Convenio select(int codigo) {
+	public Convenio select(String codigo) {
 		String query = "";
 		return null;
 	}

@@ -61,7 +61,7 @@ public class ServidorDB {
 	 * query do placeholder de busca de um servidor de acordo com a string de busca
 	 */
 	public Servidor selectServidor(String str) {
-		String query = "SELECT FROM servidor WHERE cpf=? OR matricula=? OR nome=?);";
+		String query = "SELECT FROM servidor WHERE cpf=? OR matricula=? OR nome=?;";
 		Servidor s = new Servidor();
 		conn = DriveManager.getConnection();
 		try {
@@ -404,18 +404,19 @@ public class ServidorDB {
 		String query1 = "SELECT codigo_convenio FROM convenio_servidor WHERE  codigo_servidor=?;";
 		conn = DriveManager.getConnection();
 		List<Convenio> convenios = null;
-		List<Integer> codigos_convenio = new ArrayList<Integer>();
+		List<String> codigos_convenio = new ArrayList<String>();
 
 		try {
 			pstmt = conn.prepareStatement(query1);
+			pstmt.setString(1, servidor.getCpf());
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
-				codigos_convenio.add(rs.getInt("codigo_convenio"));
+				codigos_convenio.add(rs.getString("codigo_convenio"));
 			}
 
 			convenios = new ArrayList<Convenio>();
 			ConvenioDB cb = new ConvenioDB();
-			for (Integer codigo : codigos_convenio) {
+			for (String codigo : codigos_convenio) {
 				convenios.add(cb.select(codigo));
 			}
 
