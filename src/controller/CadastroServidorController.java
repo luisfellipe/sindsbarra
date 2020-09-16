@@ -7,11 +7,9 @@ import dao.ServidorDB;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -20,11 +18,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Servidor;
 import view.TelaConvenioServidor;
+import view.TelaServidorConvenio;
 import model.Convenio;
 import model.Endereco;
 import model.Ficha;
 
-public class CadastroServidorController implements Initializable { 
+public class CadastroServidorController implements Initializable {
 
 	@FXML
 	private AnchorPane rootLayout;
@@ -45,12 +44,17 @@ public class CadastroServidorController implements Initializable {
 	private Button btnSalvar;
 	private ObservableList<Servidor> dadosDaTabela = null;
 	private Servidor servidor = null;
-	private boolean update = false;
+	private boolean update = false;// se ha um funcionario que vai ser atualizado no banco de dados
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
+		cbEstadoCivil.getItems().add("Solteiro(a)");
+		cbEstadoCivil.getItems().add( "Casado(a)");
+		cbEstadoCivil.getItems().add( "Divorciado(a)");
+		cbEstadoCivil.getItems().add( "Viuvo(a)");
 		
-
+		cbSexo.getItems().add("Masculino");
+		cbSexo.getItems().add("Feminino");
 	}
 
 	/*
@@ -59,50 +63,20 @@ public class CadastroServidorController implements Initializable {
 	@SuppressWarnings("unchecked")
 	@FXML
 	private void adicionarServidor() {
-		TextField tfNode = null;
-		DatePicker dpNode = null;
-		ChoiceBox<String> cbNode = null;
-		Alert a = new Alert(AlertType.CONFIRMATION);
-		a.setTitle("Campos Vazios!");
-		a.setHeaderText("Um ou mais campos podem estar vazios!");
-		a.setContentText("Tenha certeza que todos os campos estão preenchidos!");
-		a.getButtonTypes().clear();
-		ButtonType btntComfirmar = new ButtonType("comfirmar");
-		a.getButtonTypes().add(btntComfirmar);
-
-		for (Node node : rootLayout.getChildren()) {
-			if (node instanceof TextField) {
-				tfNode = (TextField) node;
-				if (tfNode.getText() == "") {
-					a.show();
-					return;
-
-				}
-			} else if (node instanceof DatePicker) {
-				dpNode = (DatePicker) node;
-				if (dpNode.getValue() == null) {
-					a.show();
-					return;
-				}
-			} else if (node instanceof ChoiceBox) {
-				cbNode = (ChoiceBox<String>) node;
-				if (dpNode.getValue() == null) {
-					a.show();
-					return;
-				}
-			}
-		}
+		
 		Ficha ficha = null;
 		Endereco endereco = null;
-		if(servidor == null) {
+		if (servidor == null) {
 			servidor = new Servidor();
 			ficha = new Ficha();
 			endereco = new Endereco();
-		}else {
+		} else {
 			ficha = servidor.getFicha();
-			endereco = ficha.getEndereco();
+			if(ficha != null) {
+				endereco = ficha.getEndereco();
+			}
 		}
-		
+
 		servidor.setNome(tfNome.getText());
 		servidor.setFuncao(tfFuncao.getText());
 		servidor.setCpf(tfCpf.getText());
@@ -127,7 +101,7 @@ public class CadastroServidorController implements Initializable {
 		endereco.setEstado(tfEstado.getText());
 
 		ficha.setEndereco(endereco);
-		servidor.setFicha(ficha); 
+		servidor.setFicha(ficha);
 
 		/*
 		 * Atualiza ou adiciona um novo servidor
@@ -140,12 +114,14 @@ public class CadastroServidorController implements Initializable {
 		if (dadosDaTabela != null) {
 			dadosDaTabela.add(servidor);
 		}
+		Alert a = new Alert(AlertType.CONFIRMATION);
+		a.setContentText("Servidor adicionado!!");
 
 	}
 
 	@FXML
 	private void adicionarConvenio() {
-
+		TelaServidorConvenio tsc = new TelaServidorConvenio();
 	}
 
 	@FXML
@@ -164,61 +140,63 @@ public class CadastroServidorController implements Initializable {
 	 * 
 	 * @param servidor
 	 */
-	public void setServidor(Servidor servidor) {
-		dadosDaTabela.remove(servidor);
+	public void setServidor(ObservableList<Servidor> dadosDaTabela, Servidor servidor) {
 		this.servidor = servidor;
+		this.dadosDaTabela = dadosDaTabela;
+		dadosDaTabela.remove(servidor);
+
 		{
-			if (servidor.getNome() != null)
+			//if (servidor.getNome() != null)
 				tfNome.setText(servidor.getNome());
-			if (servidor.getCpf() != null)
+			//if (servidor.getCpf() != null)
 				tfCpf.setText(servidor.getCpf());
-			if (servidor.getFuncao() != null)
+			//if (servidor.getFuncao() != null)
 				tfFuncao.setText(servidor.getFuncao());
-			if (servidor.getMatricula() != null)
+			//if (servidor.getMatricula() != null)
 				tfMatricula.setText(servidor.getMatricula());
-			if (servidor.getQtdDependentes() != null)
+			//if (servidor.getQtdDependentes() != null)
 				tfDependentes.setText(servidor.getQtdDependentes() + "");
-			if (servidor.getRg() != null)
+			//if (servidor.getRg() != null)
 				tfRG.setText(servidor.getRg());
-			if (servidor.getDataAdmissao() != null)
+			//if (servidor.getDataAdmissao() != null)
 				dataPickerAdmissao.setValue(servidor.getDataAdmissao());
-			if (servidor.getDataNasc() != null)
+			//if (servidor.getDataNasc() != null)
 				dataPickerNasc.setValue(servidor.getDataNasc());
 
 			Ficha fichaServidor = servidor.getFicha();
 
 			if (fichaServidor != null) {
-				if (fichaServidor.getNomeMae() != null)
+				//if (fichaServidor.getNomeMae() != null)
 					tfNomeMae.setText(fichaServidor.getNomeMae());
-				if (fichaServidor.getNomePai() != null)
+				//if (fichaServidor.getNomePai() != null)
 					tfNomePai.setText(fichaServidor.getNomePai());
-				if (fichaServidor.getEstadoCivil() != null)
+			//	if (fichaServidor.getEstadoCivil() != null)
 					cbEstadoCivil.getItems().add(fichaServidor.getEstadoCivil());
-				if (fichaServidor.getSexo() != null)
+			//	if (fichaServidor.getSexo() != null)
 					cbSexo.getItems().add(fichaServidor.getSexo());
 
 				Endereco enderecoServidor = servidor.getFicha().getEndereco();
 
 				if (enderecoServidor != null) {
-					if (enderecoServidor.getCidadeNatal() != null)
+				//	if (enderecoServidor.getCidadeNatal() != null)
 						tfCidadeNatal.setText(enderecoServidor.getCidadeNatal());
-					if (enderecoServidor.getCep() != null)
+					//if (enderecoServidor.getCep() != null)
 						tfCep.setText(enderecoServidor.getCep());
-					if (enderecoServidor.getCidadeAtual() != null)
+					//if (enderecoServidor.getCidadeAtual() != null)
 						tfCidadeAtual.setText(enderecoServidor.getCidadeAtual());
-					if (enderecoServidor.getBairro() != null)
+					//if (enderecoServidor.getBairro() != null)
 						tfBairro.setText(enderecoServidor.getBairro());
-					if (enderecoServidor.getEstado() != null)
+					//if (enderecoServidor.getEstado() != null)
 						tfEstado.setText(enderecoServidor.getEstado());
-					if (enderecoServidor.getRua() != null)
+					//if (enderecoServidor.getRua() != null)
 						tfRua.setText(enderecoServidor.getRua());
-					if (enderecoServidor.getNumero() != null)
+					//if (enderecoServidor.getNumero() != null)
 						tfNumero.setText(enderecoServidor.getNumero() + "");
 				}
 			}
 
 		}
-		btnSalvar.setText("Atualizar");//altera titulo do button Salvar -> Atualizar
+		btnSalvar.setText("Atualizar");// altera titulo do button Salvar -> Atualizar
 		this.update = true;
 		// System.out.println(servidor.toString());
 	}
@@ -231,7 +209,6 @@ public class CadastroServidorController implements Initializable {
 
 	public void addObservableList(ObservableList<Servidor> dadosDaTabela) {
 		this.dadosDaTabela = dadosDaTabela;
-
 	}
 
 }
