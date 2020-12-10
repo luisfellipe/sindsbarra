@@ -5,7 +5,6 @@
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TableColumn?>
@@ -33,16 +32,13 @@
 					<items>
 						<MenuItem mnemonicParsing="false" onAction="#novoServidor" text="novo servidor" /> <!--implementado-->
 						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem mnemonicParsing="false" onAction="#exibirServidor" text="visualizar servidor" /> <!--implementado-->
-						<MenuItem mnemonicParsing="false" onAction="#editarServidor" text="editar servidor" /> <!--implementado-->
-						<MenuItem mnemonicParsing="false" onAction="#removerServidor" text="remover servidor" /> <!--implementado-->
-						<MenuItem mnemonicParsing="false" onAction="#conveniosServidor" text="convênios do servidor" /> <!--implementar-->
-						<MenuItem mnemonicParsing="false" onAction="#adicionarConvenioServidor" text="adicionar convênio" /> <!--implementar-->
+						<MenuItem mnemonicParsing="false" onAction="#visualizarServidor" text="visualizar servidor" /> <!--implementado-->
+						<MenuItem mnemonicParsing="false" onAction="#removerServidor" text="remover servidor" /> <!--implementar-->
+						<MenuItem mnemonicParsing="false" onAction="#gerarFichaServidor" text="gerar ficha" /> <!--implementar-->
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem mnemonicParsing="false" onAction="#exibirConvenios" text="convênios" /> <!--implementar-->
 						<MenuItem mnemonicParsing="false" onAction="#adicionarConvenio" text="novo convênio" /><!--implementado-->
 						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem mnemonicParsing="false" onAction="#gerarFichaServidor" text="gerar ficha" /> <!--implementar-->
 					</items>
 				</ContextMenu>
 			</contextMenu>
@@ -58,16 +54,6 @@
 				<Font name="System Bold" size="14.0" />
 			</font>
 		</Button>
-		<MenuButton id="mBtnConvenios" fx:id="mbConvenios" layoutX="587.0" layoutY="59.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="132.0" text="Convênios">
-			<font>
-				<Font name="System Bold" size="14.0" />
-			</font>
-		</MenuButton>
-      <Button layoutX="776.0" layoutY="60.0" mnemonicParsing="false" onAction="#atualizarTabela" text="atualizar tabela">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font>
-      </Button>
       <MenuBar prefHeight="29.0" prefWidth="1300.0">
         <menus>
           <Menu mnemonicParsing="false" text="Arquivos">

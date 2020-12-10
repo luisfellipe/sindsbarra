@@ -19,17 +19,21 @@ public class Data {
 		formatter = DateTimeFormatter.ofPattern(pattern);
 	}
 	public Date getDate(LocalDate data) {
+		if(data == null) return null;
 		return Date.valueOf(data);
 	}
 	
 	public String getStringDate(LocalDate data) {
+		if(data == null) return null;
 		return data.format(formatter);
 	}
 	
 	public LocalDate getLocalDate(String data) {
+		if(data == null) return null;
 		return LocalDate.parse(data, formatter);
 	}
 	public LocalDate getLocalDate(Date data) {
+		if(data == null) return null;
 		return data.toLocalDate();
 	}
 	/*

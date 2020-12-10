@@ -10,7 +10,7 @@ import model.Servidor;
 
 public class TelaServidorConvenio extends Application {
 	private Servidor servidor = null;
-	private String resource = "/fxml/ServidorConvenio.fxml";
+	private String resource = "/fxml/VisualizarServidorConvenio.fxml";
 	private Parent root;
 	FXMLLoader loader;
 
@@ -20,7 +20,6 @@ public class TelaServidorConvenio extends Application {
 			loader = new FXMLLoader(getClass().getResource(resource));
 			root = (Parent) loader.load();
 			if (servidor != null) {
-
 				ServidorConvenioController controller = (ServidorConvenioController) loader.getController();
 				controller.setServidor(servidor);
 			}

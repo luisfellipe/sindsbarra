@@ -8,13 +8,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="902.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ServidorConvenioController">
+<AnchorPane fx:id="lbServidor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="584.0" prefWidth="902.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ServidorConvenioController">
    <children>
-      <TableView fx:id="tabelaConvenio" layoutX="14.0" layoutY="116.0" prefHeight="407.0" prefWidth="872.0">
+      <TableView fx:id="tabelaConvenio" layoutX="22.0" layoutY="127.0" prefHeight="426.0" prefWidth="865.0">
         <columns>
-          <TableColumn fx:id="nomeColuna" prefWidth="468.0" text="Nome" />
-            <TableColumn fx:id="valorColuna" prefWidth="113.0" text="Valor" />
-          <TableColumn fx:id="colunaValorAdesao" prefWidth="142.0" text="Data Adesao" />
+          <TableColumn fx:id="nomeColuna" prefWidth="697.0" text="Nome" />
+            <TableColumn prefWidth="146.0" text="Total" />
         </columns>
          <contextMenu>
             <ContextMenu>
@@ -25,14 +24,9 @@
             </ContextMenu>
          </contextMenu>
       </TableView>
-      <Label layoutX="290.0" layoutY="14.0" text="Convenios " textFill="RED">
+      <Label layoutX="353.0" layoutY="25.0" text="Convenios " textFill="RED">
          <font>
             <Font name="System Bold" size="32.0" />
-         </font>
-      </Label>
-      <Label fx:id="lbNomeServidor" layoutX="24.0" layoutY="72.0" text=". . .">
-         <font>
-            <Font size="16.0" />
          </font>
       </Label>
    </children>

@@ -1,31 +1,23 @@
 package view;
 
-import java.util.List;
-
-import controller.ConvenioController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import model.Convenio;
+import model.Servidor;
 
-public class TelaConvenioServidor extends Application {
+public class TelaCadastroSC extends Application {
 	private Parent rootLayout;
 	FXMLLoader loader = null;
-	private String resource = "/fxml/VisualizarConvenios.fxml";
+	private String resource = "/fxml/CadastroSC.fxml";
+	private Servidor servidor = null;
 
-	List<Convenio> convenios = null;
- 
 	@Override
 	public void start(Stage stage) {
 		try {
 			loader = new FXMLLoader(getClass().getResource(resource));
 			rootLayout = (Parent) loader.load();
-			if (convenios != null) {
-				ConvenioController controller = (ConvenioController) loader.getController();
-				controller.visualizar(convenios);
-			}
 			Scene scene = new Scene(rootLayout);
 			stage.setScene(scene);
 			stage.show();
@@ -36,11 +28,10 @@ public class TelaConvenioServidor extends Application {
 	}
 
 	public static void main(String[] args) {
-		launch(TelaConvenioServidor.class, args);
+		launch(TelaCadastroSC.class, args);
 	}
-
-	public void setConvenios(List<Convenio> convenios) {
-		this.convenios = convenios;
+	
+	public void setServidor(Servidor s) {
+		this.servidor = s;
 	}
- 
 }

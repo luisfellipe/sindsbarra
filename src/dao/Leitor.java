@@ -11,9 +11,11 @@ import java.util.List;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 
+import model.Convenio;
 import model.Data;
 import model.Pessoa;
 import model.Servidor;
+import model.ServidorConvenio;
 
 public class Leitor {
 
@@ -65,7 +67,7 @@ public class Leitor {
 		return linha;
 	}
 
-	public List<Pessoa> readAll(String path) {
+	public List<Pessoa> importarServidores(String path) {
 		this.open(path);
 		String[] nextLine = null;
 		List<Pessoa> lista = new ArrayList<>(50);
@@ -97,5 +99,19 @@ public class Leitor {
 		this.close();
 		return lista;
 	}
+
+	
+	private void exportarConveniosCSV(List<Convenio> convenios) {
+		
+	}
+	
+	private void exportarServidorConvenioCSV(List<ServidorConvenio> servidorConvenios) {
+		
+	}
+	
+	private void exportarServidores(List<Servidor> servidores) {
+		
+	}
+	
 
 }

@@ -72,19 +72,6 @@ public class Servidor extends Pessoa {
 		this.qtdDependentes = qtdDependentes;
 	}
 
-	@Override
-	public String toString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("Nome: ").append(getNome()).append("\n")
-		.append("CPF: ").append(getCpf()).append("\n")
-		.append("RG: ").append(getRg()).append("\n")
-		.append("Função: ").append(getFuncao()).append("\n")
-		.append("Matricula: ").append(getMatricula()).append("\n")
-		.append("Data Nascimento: ").append(getDataNasc()).append("\n")
-		.append("Data Admissao: ").append(getDataAdmissao());
-		
-		return  sb.toString();
-	}
 
 	/**
 	 * @return the fi
@@ -98,5 +85,20 @@ public class Servidor extends Pessoa {
 	 */
 	public void setFicha(Ficha fi) {
 		this.fi = fi;
+	}
+	
+
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("Nome: ").append(getNome()).append("\n")
+		.append("CPF: ").append(getCpf()).append("\n")
+		.append("RG: ").append(getRg()).append("\n")
+		.append("Função: ").append(getFuncao()).append("\n")
+		.append("Matricula: ").append(getMatricula()).append("\n")
+		.append("Data Nascimento: ").append(getDataNasc()).append("\n")
+		.append("Data Admissao: ").append(getDataAdmissao());
+		
+		return  sb.toString();
 	}
 }

@@ -1,12 +1,10 @@
 package model;
-
 import java.time.LocalDate;
-
-
 public class Convenio {
 	private String nomeConvenio, descricao;
 	private LocalDate dataAdesao;
-	private float valor;
+	private Double valor;
+
 
 	/**
 	 * @return the nome
@@ -39,14 +37,14 @@ public class Convenio {
 	/**
 	 * @return the valor
 	 */
-	public float getValor() {
+	public Double getValor() {
 		return valor;
 	}
 
 	/**
 	 * @param valor the valor to set
 	 */
-	public void setValor(float valor) {
+	public void setValor(Double valor) {
 		this.valor = valor;
 	}
 
@@ -63,5 +61,4 @@ public class Convenio {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	
 }

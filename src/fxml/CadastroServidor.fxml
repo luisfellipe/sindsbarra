@@ -36,7 +36,7 @@
 				<Font size="14.0" />
 			</font>
 		</TextField>
-		<TextField id="tfCpf" fx:id="tfCpf" layoutX="29.0" layoutY="229.0" prefHeight="28.0" prefWidth="129.0" promptText="xxx.xxx.xxx-xx">
+		<TextField id="tfCpf" fx:id="tfCpf" layoutX="29.0" layoutY="229.0" prefHeight="28.0" prefWidth="143.0" promptText="xxx.xxx.xxx-xx">
 			<font>
 				<Font size="14.0" />
 			</font>
@@ -46,12 +46,12 @@
 				<Font size="14.0" />
 			</font>
 		</TextField>
-		<TextField id="tfMatricula" fx:id="tfMatricula" layoutX="353.0" layoutY="230.0" prefHeight="28.0" prefWidth="90.0" promptText="xxxxx-x">
+		<TextField id="tfMatricula" fx:id="tfMatricula" layoutX="353.0" layoutY="230.0" prefHeight="28.0" prefWidth="143.0" promptText="xxxxx-x">
 			<font>
 				<Font size="14.0" />
 			</font>
 		</TextField>
-		<Button id="btnSalvarServidor" fx:id="btnSalvar" layoutX="746.0" layoutY="581.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#adicionarServidor" prefHeight="40.0" prefWidth="137.0" stylesheets="@../css/application.css" text="Salvar" textAlignment="CENTER">
+		<Button id="btnSalvarServidor" fx:id="btnSalvar" layoutX="733.0" layoutY="581.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#adicionarServidor" prefHeight="40.0" prefWidth="150.0" stylesheets="@../css/application.css" text="Salvar" textAlignment="CENTER">
 			<font>
 				<Font name="System Bold" size="20.0" />
 			</font>
@@ -71,9 +71,9 @@
          </font>
       </Label>
       <TextField fx:id="tfTelefone" layoutX="352.0" layoutY="169.0" prefHeight="26.0" prefWidth="143.0" promptText="(xx) x xxxx-xxxx" />
-      <TextField fx:id="tfRG" layoutX="185.0" layoutY="230.0" prefHeight="26.0" prefWidth="98.0" promptText="xxx.xxx-xx" />
+      <TextField fx:id="tfRG" layoutX="212.0" layoutY="227.0" prefHeight="26.0" prefWidth="108.0" promptText="xxx.xxx-xx" />
       <TextField fx:id="tfEstado" layoutX="791.0" layoutY="417.0" prefHeight="28.0" prefWidth="80.0" promptText="estado" />
-      <Label fx:id="lbRG" layoutX="185.0" layoutY="210.0" text="RG">
+      <Label fx:id="lbRG" layoutX="212.0" layoutY="207.0" text="RG">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
@@ -112,11 +112,6 @@
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Label>
-      <Button id="btnConvenios" layoutX="746.0" layoutY="495.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#adicionarConvenio" prefHeight="40.0" prefWidth="137.0" stylesheets="@../css/application.css" text="Covenios" textAlignment="CENTER">
-         <font>
-            <Font name="System Bold" size="20.0" />
-         </font>
-      </Button>
       <Label id="lbDataAdmissao" fx:id="lbDataAdmissao" layoutX="247.0" layoutY="337.0" text="Admissao:">
          <font>
             <Font name="System Bold" size="14.0" />
@@ -163,7 +158,7 @@
          </font>
       </Label>
       <ChoiceBox fx:id="cbSexo" layoutX="247.0" layoutY="297.0" prefHeight="26.0" prefWidth="150.0" />
-      <Button id="btnFechar" fx:id="btnFechar" layoutX="605.0" layoutY="581.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onActionFechar" prefHeight="40.0" prefWidth="105.0" stylesheets="@../css/application.css" text="Fechar" textAlignment="CENTER">
+      <Button id="btnFechar" fx:id="btnFechar" layoutX="535.0" layoutY="581.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onActionFechar" prefHeight="40.0" prefWidth="150.0" stylesheets="@../css/application.css" text="Fechar" textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
@@ -174,5 +169,10 @@
          </font>
       </Label>
       <TextField fx:id="tfCidadeNatal" layoutX="549.0" layoutY="180.0" prefHeight="28.0" prefWidth="320.0" promptText="nome da cidade" />
+      <Button fx:id="btnServidorConvenios" layoutX="733.0" layoutY="504.0" mnemonicParsing="false" onAction="#visualizarServidorConvenios" prefHeight="40.0" prefWidth="150.0" text="Convenios">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Button>
 	</children>
 </AnchorPane>

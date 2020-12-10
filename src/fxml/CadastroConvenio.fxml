@@ -20,38 +20,39 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Button>
-      <Label layoutX="18.0" layoutY="109.0" text="Nome:">
+      <Label layoutX="18.0" layoutY="99.0" text="Nome:">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label layoutX="20.0" layoutY="153.0" text="Valor:">
+      <Label layoutX="20.0" layoutY="143.0" text="Valor:">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label layoutX="275.0" layoutY="153.0" text="Data Adesao:">
+      <Label layoutX="275.0" layoutY="143.0" text="Data Adesao:">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="tfNome" layoutX="71.0" layoutY="104.0" prefHeight="26.0" prefWidth="498.0" promptText="nome do novo convênio" />
-      <TextField fx:id="tfValor" layoutX="71.0" layoutY="149.0" promptText="valor do novo convênio" />
-      <TextArea fx:id="taDescricao" layoutX="20.0" layoutY="211.0" prefHeight="163.0" prefWidth="547.0" promptText="digite uma descrição do convêino aqui!">
+      <TextField fx:id="tfNome" layoutX="71.0" layoutY="94.0" prefHeight="26.0" prefWidth="498.0" promptText="nome do novo convênio" />
+      <TextField fx:id="tfValor" layoutX="71.0" layoutY="139.0" promptText="valor do novo convênio" />
+      <TextArea fx:id="taDescricao" layoutX="20.0" layoutY="211.0" onKeyPressed="#contaLetras" prefHeight="163.0" prefWidth="547.0" promptText="digite uma descrição do convêino aqui! max 150 caracteres">
          <font>
             <Font size="16.0" />
          </font>
       </TextArea>
-      <Label layoutX="21.0" layoutY="195.0" text="Descriçao:">
+      <Label layoutX="20.0" layoutY="188.0" text="Descriçao:">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <DatePicker fx:id="dpDataAderido" layoutX="393.0" layoutY="148.0" prefHeight="26.0" prefWidth="171.0" promptText="data de adesão" />
-      <Label contentDisplay="CENTER" graphicTextGap="6.0" layoutX="181.0" layoutY="34.0" text="Cadastrar Convenio" textAlignment="CENTER" textFill="#da1515">
+      <DatePicker fx:id="dpDataAderido" layoutX="393.0" layoutY="138.0" prefHeight="26.0" prefWidth="171.0" promptText="data de adesão" />
+      <Label contentDisplay="CENTER" graphicTextGap="6.0" layoutX="181.0" layoutY="26.0" text="Cadastrar Convenio" textAlignment="CENTER" textFill="#da1515">
          <font>
             <Font name="System Bold" size="25.0" />
          </font>
       </Label>
+      <Label fx:id="lbContaChar" layoutX="528.0" layoutY="189.0" text="0/150" />
    </children>
 </AnchorPane>
