@@ -9,11 +9,13 @@ package model;
 public class ServidorConvenio {
 	private Servidor servidor = null;
 	private Convenio convenio = null;
-	private Double valor = null;
+	private String nome = null;
+	private Double valor = 0.0;
 
 	public ServidorConvenio(Servidor servidor, Convenio conv) {
 		this.servidor = servidor;
 		this.convenio = conv;
+		nome = convenio.getNome();
 		valor = convenio.getValor() * servidor.getQtdDependentes();
 
 	}
@@ -26,7 +28,11 @@ public class ServidorConvenio {
 		return convenio;
 	}
 
-	public Double getValorTotal() {
+	public Double getValor() {
 		return valor;
+	}
+
+	public String getNome() {
+		return nome;
 	}
 }

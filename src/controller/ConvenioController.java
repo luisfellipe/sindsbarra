@@ -7,7 +7,6 @@ import java.util.ResourceBundle;
 
 import dao.ConvenioDB;
 import dao.ServidorDB;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -17,7 +16,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.Convenio;
-import model.Servidor;
+import model.ServidorConvenio;
 import view.TelaCadastroConvenio;
 
 public class ConvenioController implements Initializable {
@@ -50,14 +49,28 @@ public class ConvenioController implements Initializable {
 
 	@FXML
 	private void onActionNovo() {
+		TelaCadastroConvenio tcc = new TelaCadastroConvenio();
 		Stage stage = new Stage();
-		new TelaCadastroConvenio().start(stage);
-		tabela.refresh();
+		tcc.start(stage);
+		update();
 	}
 
 	@FXML
 	private void onActionRemover() {
 		Convenio c = tabela.getSelectionModel().getSelectedItem();
 		new ConvenioDB().delete(c);
+		update();
+	}
+	@FXML
+	private void imprimirLista() {
+		Convenio c = tabela.getSelectionModel().getSelectedItem();
+		List<ServidorConvenio> sclista = new ServidorDB().getAllServidorConvenio(c);
+	}
+	
+	private void update() {
+		tabela.getItems().clear();
+		convenios = new ConvenioDB().getAll();
+		tabela.getItems().addAll(convenios);
+		tabela.refresh();
 	}
 }

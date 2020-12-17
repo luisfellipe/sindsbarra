@@ -8,25 +8,30 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="lbServidor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="584.0" prefWidth="902.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ServidorConvenioController">
+<AnchorPane fx:id="lbServidor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="902.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ServidorConvenioController">
    <children>
-      <TableView fx:id="tabelaConvenio" layoutX="22.0" layoutY="127.0" prefHeight="426.0" prefWidth="865.0">
+      <TableView fx:id="tabela" layoutX="22.0" layoutY="71.0" prefHeight="328.0" prefWidth="865.0">
         <columns>
           <TableColumn fx:id="nomeColuna" prefWidth="697.0" text="Nome" />
-            <TableColumn prefWidth="146.0" text="Total" />
+            <TableColumn fx:id="valorColuna" prefWidth="146.0" text="Total" />
         </columns>
          <contextMenu>
             <ContextMenu>
               <items>
-                  <MenuItem mnemonicParsing="false" text="remover" />
-                <MenuItem mnemonicParsing="false" text="novo" />
+                  <MenuItem mnemonicParsing="false" onAction="#onActionRemover" text="remover" />
+                <MenuItem mnemonicParsing="false" onAction="#onActionAdicionar" text="adicionar" />
               </items>
             </ContextMenu>
          </contextMenu>
       </TableView>
-      <Label layoutX="353.0" layoutY="25.0" text="Convenios " textFill="RED">
+      <Label layoutX="248.0" layoutY="14.0" text="Convenios do servidor " textFill="RED">
          <font>
             <Font name="System Bold" size="32.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbTotal" layoutX="22.0" layoutY="411.0" prefHeight="26.0" prefWidth="241.0" text="Total: R$ 0.00">
+         <font>
+            <Font size="20.0" />
          </font>
       </Label>
    </children>

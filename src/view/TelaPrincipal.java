@@ -17,10 +17,11 @@ public class TelaPrincipal extends Application {
 			root = FXMLLoader.load(getClass().getResource(resource));
 	
 			stage.setTitle("SINDSBARRA");
+			stage.setWidth(1300);
+			stage.setHeight(707);
+			stage.setResizable(false);
 			Scene scene = new Scene(root);
-
 			stage.setScene(scene);
-			stage.setMaximized(true);
 			stage.show();
 
 		} catch (Exception e) {

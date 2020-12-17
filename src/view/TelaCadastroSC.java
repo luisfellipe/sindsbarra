@@ -1,5 +1,6 @@
 package view;
 
+import controller.CadastroSCController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,20 +19,25 @@ public class TelaCadastroSC extends Application {
 		try {
 			loader = new FXMLLoader(getClass().getResource(resource));
 			rootLayout = (Parent) loader.load();
+			if (servidor != null) {
+				CadastroSCController controller = (CadastroSCController) loader.getController();
+				controller.setServidor(servidor);
+			}
 			Scene scene = new Scene(rootLayout);
 			stage.setScene(scene);
+			stage.setResizable(false);;
 			stage.show();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
-	public static void main(String[] args) {
-		launch(TelaCadastroSC.class, args);
+	
+	public void setServidor(Servidor servidor) {
+		this.servidor = servidor;
 	}
 	
-	public void setServidor(Servidor s) {
-		this.servidor = s;
+	public static void main(String[] args) {
+		launch(TelaCadastroSC.class, args);
 	}
 }

@@ -3,6 +3,8 @@ package controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 import dao.ServidorDB;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -10,7 +12,10 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Font;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Servidor;
 import view.TelaServidorConvenio;
@@ -34,17 +39,45 @@ public class CadastroServidorController implements Initializable {
 	private ChoiceBox<String> cbEstadoCivil, cbSexo;
 	@FXML
 	private Button btnFechar, btnSalvar, btnServidorConvenios;
-	private Servidor servidor;
-	private boolean update;// se ha um funcionario que vai ser atualizado no banco de dados
+	private Servidor servidor = null;
+	private boolean update = false;// se ha um funcionario que vai ser atualizado no banco de dados
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-		servidor = null;
-		update = false;
+		/*
+		 * Button para adicionar e visualizar convenios permanece desativado ate que o
+		 * servidor na tela seja adicionado
+		 */
+		btnServidorConvenios.setDisable(true);
+		btnSalvar.setDisable(true);
+		
 		String[] opt1 = { "Solteiro(a)", "Casado(a)", "Divorciado(a)", "Viuvo(a)" };
 		cbEstadoCivil.getItems().addAll(opt1);
 		String[] opt2 = { "Masculino", "Feminino" };
 		cbSexo.getItems().addAll(opt2);
+
+		Tooltip ttCpf = new Tooltip("CPF não pode ser repetido!");
+		ttCpf.setFont(new Font(14));
+		tfCpf.setTooltip(ttCpf);
+		Tooltip ttsc = new Tooltip("Adicione e remova convenios do servidor!");
+		ttsc.setFont(new Font(14));
+		btnServidorConvenios.setTooltip(ttsc);
+
+		// ativa button para visualizar e adicionar convenios
+		tfCpf.setOnKeyTyped(new EventHandler<Event>() {
+			@Override
+			public void handle(Event e) {
+				// TODO Auto-generated method stub
+				String cpf = tfCpf.getText();
+				if (new Servidor().isCpf(cpf)) {
+					if (!tfNome.getText().isBlank()) {
+						btnSalvar.setDisable(false);
+					}
+				}else {
+					btnSalvar.setDisable(true);
+				}
+			}
+		});
 
 	}
 
@@ -86,14 +119,15 @@ public class CadastroServidorController implements Initializable {
 		ficha.setEndereco(endereco);
 		servidor.setFicha(ficha);
 
-		/*
-		 * Atualiza ou adiciona um novo servidor
-		 */
 		if (update) {
+			// atualizar servidor no banco de dados
 			new ServidorDB().update(servidor);
 		} else {
 			new ServidorDB().save(servidor);// salva servidor no banco de dados
+			// Ativa o botão para adicionar convenios
+			btnServidorConvenios.setDisable(false);
 		}
+
 	}
 
 	@FXML
@@ -101,8 +135,11 @@ public class CadastroServidorController implements Initializable {
 		TelaServidorConvenio tsc = new TelaServidorConvenio();
 		tsc.setServidor(servidor);
 		Stage stage = new Stage();
+		stage.centerOnScreen();
+		stage.initModality(Modality.APPLICATION_MODAL);
 		tsc.start(stage);
 	}
+
 	/**
 	 * Servidor selecionado na tabela principal
 	 * 
@@ -125,7 +162,7 @@ public class CadastroServidorController implements Initializable {
 			if (fichaServidor != null) {
 				tfNomeMae.setText(fichaServidor.getNomeMae());
 				tfNomePai.setText(fichaServidor.getNomePai());
-				
+
 				if (fichaServidor.getEstadoCivil() != null) {
 					for (String item : cbEstadoCivil.getItems()) {
 						if (item.contains(fichaServidor.getEstadoCivil())) {
@@ -133,7 +170,7 @@ public class CadastroServidorController implements Initializable {
 						}
 					}
 				}
-			
+
 				if (fichaServidor.getSexo() != null) {
 					if (fichaServidor.getSexo().contains("Masculino"))
 						cbSexo.getSelectionModel().select("Masculino");
@@ -156,10 +193,18 @@ public class CadastroServidorController implements Initializable {
 
 		}
 		btnSalvar.setText("Atualizar");// altera titulo do button Salvar -> Atualizar
+		Tooltip ttbs = new Tooltip("Atualizar dados do servidor!");
+		ttbs.setFont(new Font(14));
+		btnSalvar.setTooltip(ttbs);
+
+		// ativa button para visualizar e adicionar convenios
+		btnServidorConvenios.setDisable(false);
+		btnSalvar.setDisable(false);
 		this.update = true;
 	}
 
-	public void onActionFechar() {
+	@FXML
+	private void onActionFechar() {
 		Stage stage = (Stage) btnFechar.getScene().getWindow();
 		stage.close();
 	}

@@ -12,16 +12,16 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import dao.ServidorDB;
 import model.Servidor;
+import pdf.DeclaracaoFile;
 import view.TelaCadastroConvenio;
 import view.TelaCadastroServidor;
 import view.TelaConvenio;
-import view.TelaServidorConvenio;
 
 public class TelaPrincipalController implements Initializable {
 	@FXML
@@ -54,6 +54,7 @@ public class TelaPrincipalController implements Initializable {
 		funcaoColuna.setCellValueFactory(new PropertyValueFactory<Servidor, String>("funcao"));
 		nascColuna.setCellValueFactory(new PropertyValueFactory<Servidor, String>("dataNasc"));
 
+		//adiciona os servidores do banco de dados
 		tabela.getItems().addAll(new ServidorDB().selectAll());
 		dadosDaTabela = tabela.getItems();
 		// ordena por nome
@@ -68,8 +69,6 @@ public class TelaPrincipalController implements Initializable {
 		Stage stage = new Stage();
 		TelaCadastroServidor tcs = new TelaCadastroServidor();
 		tcs.start(stage);
-		atualizarTabela();
-
 	}
 
 	/**
@@ -89,40 +88,21 @@ public class TelaPrincipalController implements Initializable {
 			TelaCadastroServidor tcs = new TelaCadastroServidor();
 			tcs.setServidor(servidor);
 			Stage stage = new Stage();
+			stage.centerOnScreen();
+			stage.initModality(Modality.APPLICATION_MODAL);
 			tcs.start(stage);
 		}
-		atualizarTabela();
 	}
 
 	@FXML
 	private void atualizarTabela() {
 		tabela.getItems().clear();
-		tabela.refresh();
 		List<Servidor> servidores = new ServidorDB().selectAll();
 		servidores.sort(Comparator.comparing(Servidor::getNome));
 		tabela.getItems().addAll(servidores);
 		tabela.refresh();
 	}
-
-	@FXML
-	private void pesquisar() {
-		String pesquisa = tfPesquisar.getText();
-		pesquisa = pesquisa.replace(',', ' ');
-		String columns[] = pesquisa.split(" ");
-		Servidor servidor = null;
-		int x = 0;
-		for (String column : columns) {
-			servidor = new ServidorDB().select(column);
-			if (dadosDaTabela.contains(servidor)) {
-				dadosDaTabela.add(x, servidor);
-				x++;
-			}
-			servidor = null;
-		}
-		atualizarTabela();
-	}
-
-
+	
 	/**
 	 * Exibi todos os convenios cadastrados
 	 */
@@ -139,8 +119,10 @@ public class TelaPrincipalController implements Initializable {
 	@FXML
 	private void adicionarConvenio() {
 		TelaCadastroConvenio tcc = new TelaCadastroConvenio();
-		Stage stageConvenio = new Stage();
-		tcc.start(stageConvenio);
+		Stage stage = new Stage();
+		stage.centerOnScreen();
+		stage.initModality(Modality.APPLICATION_MODAL);
+		tcc.start(stage);
 	}
 
 	@FXML
@@ -149,5 +131,16 @@ public class TelaPrincipalController implements Initializable {
 
 	@FXML
 	private void gerarFichaServidor() {
+		Servidor servidor = tabela.getSelectionModel().getSelectedItem();
+		String RESULT = "file.pdf";
+		// TODO criar um filechooice que seleciona o local para salvar a declaração
+
+		DeclaracaoFile dcf = new DeclaracaoFile(servidor, RESULT);
+		dcf.declaracao();
+	}
+
+	@FXML
+	private void imprimirRelacao() {
+
 	}
 }

@@ -37,10 +37,6 @@ public class TelaCadastroServidor extends Application {
 		}
 	}
 
-	public static void main(String[] args) {
-		launch(TelaCadastroServidor.class, args);
-	}
-
 	public void setServidor(Servidor servidor) {
 		this.servidor = servidor;
 	}

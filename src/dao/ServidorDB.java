@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import model.Servidor;
 import model.ServidorConvenio;
+import model.Convenio;
 import model.Data;
 import model.Endereco;
 import model.Ficha;
@@ -41,11 +43,11 @@ public class ServidorDB {
 				if (servidor.getDataAdmissao() != null)
 					pstmt.setDate(7, dataManager.getDate(servidor.getDataAdmissao()));
 				else
-					pstmt.setDate(7, null);
+					pstmt.setDate(7,dataManager.getDate(LocalDate.now()));
 				if (servidor.getDataNasc() != null)
 					pstmt.setDate(8, new Data().getDate(servidor.getDataNasc()));
 				else
-					pstmt.setDate(8, null);
+					pstmt.setDate(8, dataManager.getDate(LocalDate.now()));
 			}
 
 			Ficha fichaServidor = servidor.getFicha();
@@ -64,12 +66,12 @@ public class ServidorDB {
 			pstmt.setInt(20, fichaServidor.getEndereco().getNumero());
 			pstmt.execute();
 			DriveManager.close();
-			{
+			/*{
 				Alert a = new Alert(AlertType.INFORMATION);
 				a.setHeaderText("ID: " + servidor.getCpf());
 				a.setContentText("Servidor adicionado!!");
 				a.show();
-			}
+			}*/
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -274,15 +276,14 @@ public class ServidorDB {
 	/// Convenio Servidor //////////////
 
 	public void saveServidorConvenio(ServidorConvenio sc) {
-		String query = "INSERT INTO convenio_servidor (codigo_servidor, codigo_convenio, dependentes,data_adesao)"
-				+ "values(?, ?, ?, ?);";
+		String query = "INSERT INTO servidor_convenio (codigo_servidor, codigo_convenio, data_adesao)"
+				+ "values(?, ?, ?);";
 		conn = DriveManager.getConnection();
 		try {
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, sc.getServidor().getCpf());
 			pstmt.setString(2, sc.getConvenio().getNome());
-			pstmt.setInt(3, sc.getServidor().getQtdDependentes());
-			pstmt.setDate(4, new Data().getDate(sc.getConvenio().getDataAdesao()));
+			pstmt.setDate(3, new Data().getDate(sc.getConvenio().getDataAdesao()));
 			pstmt.executeUpdate();
 			DriveManager.close();
 		} catch (SQLException e) {
@@ -290,7 +291,7 @@ public class ServidorDB {
 		}
 	}
 
-	public List<ServidorConvenio> getAllConvenios(Servidor servidor) {
+	public List<ServidorConvenio> getAllServidorConvenio(Servidor servidor) {
 		String query = "SELECT codigo_convenio FROM servidor_convenio WHERE  codigo_servidor=?;";
 		conn = DriveManager.getConnection();
 		List<ServidorConvenio> sclist = null;
@@ -314,8 +315,32 @@ public class ServidorDB {
 		return sclist;
 	}
 
+	public List<ServidorConvenio> getAllServidorConvenio(Convenio convenio) {
+		String query = "SELECT codigo_servidor FROM servidor_convenio WHERE  codigo_convenio=?;";
+		conn = DriveManager.getConnection();
+		List<ServidorConvenio> sclist = null;
+
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, convenio.getNome());
+			rs = pstmt.executeQuery();
+			sclist = new ArrayList<ServidorConvenio>();
+			ServidorDB sDB = new ServidorDB();
+			ServidorConvenio sc = null;
+			while (rs.next()) {
+				sc = new ServidorConvenio(sDB.select(rs.getString("codigo_servidor")), convenio);
+				sclist.add(sc);
+
+			}
+			DriveManager.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return sclist;
+	}
+
 	private boolean deleteConvenioServidor(String codigoServidor) {
-		String query = "DELETE FROM convenio_servidor WHERE codigo_servidor=?;";
+		String query = "DELETE FROM servidor_convenio WHERE codigo_servidor=?;";
 		conn = DriveManager.getConnection();
 		try {
 			pstmt = conn.prepareStatement(query);
@@ -330,7 +355,7 @@ public class ServidorDB {
 	}
 
 	public boolean deleteConvenio(String codigo) {
-		String query = "DELETE FROM convenio_servidor WHERE codigo_convenio=?;";
+		String query = "DELETE FROM servidor_convenio WHERE codigo_convenio=?;";
 		conn = DriveManager.getConnection();
 		try {
 			pstmt = conn.prepareStatement(query);

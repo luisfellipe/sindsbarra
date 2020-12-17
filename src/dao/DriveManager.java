@@ -30,7 +30,7 @@ public class DriveManager {
 			if (conn != null) {
 				System.out.println("Conexão estabelecida ! ! !");
 				System.out.print(conn.getMetaData().getDatabaseProductName() + "\n"
-						+ conn.getMetaData().getDatabaseProductVersion());
+						+ conn.getMetaData().getDatabaseProductVersion() + "\n");
 			} else {
 				System.out.println("Conexão falhou ! ! !");
 			}

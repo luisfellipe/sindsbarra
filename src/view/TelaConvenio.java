@@ -25,8 +25,4 @@ public class TelaConvenio extends Application {
 			e.printStackTrace();
 		}
 	}
-
-	public static void main(String[] args) {
-		launch(TelaConvenio.class, args);
-	}
 }

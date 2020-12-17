@@ -65,7 +65,7 @@ public class ConvenioDB {
 		}
 	}
 
-	public void update(Convenio convenio, Integer oldCodigo) {
+	public void update(Convenio convenio, String nome) {
 		String query = "UPDATE convenio SET nome=? descricao=? data_adesao=? valor=? codigo =? WHERE nome=?";
 		conn = DriveManager.getConnection();
 		try {
@@ -76,7 +76,7 @@ public class ConvenioDB {
 			pstmt.setDate(3, new Data().getDate(convenio.getDataAdesao()));
 			pstmt.setDouble(4, convenio.getValor());
 			pstmt.setString(5, convenio.getNome());// atualiza codigo se nome tiver mudado
-			pstmt.setInt(6, oldCodigo);
+			pstmt.setString(6, convenio.getNome());
 			pstmt.executeQuery();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -94,33 +94,33 @@ public class ConvenioDB {
 	/*
 	 * recebe um cogigo de um cenvenio e retorna um objeto desse convenio
 	 */
-	public Convenio select(String codigo) {
+	public Convenio select(String nomeConvenio) {
 		String query = "SELECT * FROM convenio WHERE nome=?;";
 		conn = DriveManager.getConnection();
-		Convenio c = null;
+		Convenio convenio = null;
 		try {
-
 			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, codigo);
+			pstmt.setString(1, nomeConvenio);
 			rs = pstmt.executeQuery();
-			c = new Convenio();
-			c.setDataAdesao(new Data().getLocalDate(rs.getDate("data_adesao")));
-			c.setDescricao(rs.getString("descricao"));
-			c.setNome(rs.getString("nome"));
-			c.setValor(rs.getDouble("valor"));
 
+			Data dataManager = new Data();
+			while (rs.next()) {
+				convenio = new Convenio();
+				convenio.setDataAdesao(dataManager.getLocalDate(rs.getDate("data_adesao")));
+				convenio.setNome(rs.getString("nome"));
+				convenio.setValor(rs.getDouble("valor"));
+				convenio.setDescricao(rs.getString("descricao"));
+			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
 				conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		return c;
+		return convenio;
 	}
 
 	public List<Convenio> getAll() {

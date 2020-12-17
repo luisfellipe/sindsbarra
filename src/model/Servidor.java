@@ -1,6 +1,8 @@
 package model;
 
 import java.time.LocalDate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Servidor extends Pessoa {
 	private String funcao, matricula;
@@ -55,6 +57,7 @@ public class Servidor extends Pessoa {
 	 * @param dataAdmissao the dataAdmissao to set
 	 */
 	public void setDataAdmissao(LocalDate dataAdmissao) {
+		
 		this.dataAdmissao = dataAdmissao;
 	}
 
@@ -97,8 +100,15 @@ public class Servidor extends Pessoa {
 		.append("Função: ").append(getFuncao()).append("\n")
 		.append("Matricula: ").append(getMatricula()).append("\n")
 		.append("Data Nascimento: ").append(getDataNasc()).append("\n")
-		.append("Data Admissao: ").append(getDataAdmissao());
+		.append("Data Admissao: ").append(getDataAdmissao()).append("\n")
+		.append("Dependentes: ").append(getQtdDependentes());
 		
 		return  sb.toString();
+	}
+
+	public boolean isCpf(String cpf) {
+		Pattern p = Pattern.compile("[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}");
+		Matcher m = p.matcher(cpf);
+		return m.matches();
 	}
 }

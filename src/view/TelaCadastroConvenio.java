@@ -25,8 +25,4 @@ public class TelaCadastroConvenio extends Application {
 			e.printStackTrace();
 		}
 	}
-
-	public static void main(String[] args) {
-		launch(TelaCadastroConvenio.class, args);
-	}
 }
