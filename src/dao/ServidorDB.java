@@ -43,7 +43,7 @@ public class ServidorDB {
 				if (servidor.getDataAdmissao() != null)
 					pstmt.setDate(7, dataManager.getDate(servidor.getDataAdmissao()));
 				else
-					pstmt.setDate(7,dataManager.getDate(LocalDate.now()));
+					pstmt.setDate(7, dataManager.getDate(LocalDate.now()));
 				if (servidor.getDataNasc() != null)
 					pstmt.setDate(8, new Data().getDate(servidor.getDataNasc()));
 				else
@@ -66,12 +66,10 @@ public class ServidorDB {
 			pstmt.setInt(20, fichaServidor.getEndereco().getNumero());
 			pstmt.execute();
 			DriveManager.close();
-			/*{
-				Alert a = new Alert(AlertType.INFORMATION);
-				a.setHeaderText("ID: " + servidor.getCpf());
-				a.setContentText("Servidor adicionado!!");
-				a.show();
-			}*/
+			/*
+			 * { Alert a = new Alert(AlertType.INFORMATION); a.setHeaderText("ID: " +
+			 * servidor.getCpf()); a.setContentText("Servidor adicionado!!"); a.show(); }
+			 */
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -145,6 +143,12 @@ public class ServidorDB {
 			// Deleta convenios do servidor
 			deleteConvenioServidor(cpf);// deleta convenios do servidor
 			DriveManager.close();
+			{
+				Alert a = new Alert(AlertType.INFORMATION);
+				a.setHeaderText("Servidor deletado!");
+				a.setContentText("Todas as informações referentes ao servidor " + cpf + " foram deletadas!!");
+				a.show();
+			}
 		} catch (SQLException e) {
 			{
 				Alert a = new Alert(AlertType.ERROR);
@@ -153,12 +157,7 @@ public class ServidorDB {
 			}
 			e.printStackTrace();
 		}
-		{
-			Alert a = new Alert(AlertType.INFORMATION);
-			a.setHeaderText("Servidor deletado!");
-			a.setContentText("Todas as informações referentes ao servidor " + cpf + " foram deletadas!!");
-			a.show();
-		}
+
 		return rowsDeleted;
 	}
 

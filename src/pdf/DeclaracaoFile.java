@@ -53,7 +53,7 @@ public class DeclaracaoFile {
 	public void declaracao() {
 		createPdf();
 
-		Text titulo = new Text("Ao Sindicato dos Servidores de São José da Barra -- SindsBarra\n\n");
+		Text titulo = new Text("Ao Sindicato dos Servidores de São José da Barra  – SindsBarra\n\n");
 		Paragraph p1 = new Paragraph(titulo);
 		p1.setFontSize(14);
 		p1.setBold();
@@ -103,8 +103,8 @@ public class DeclaracaoFile {
 		s.append("ESTADO CIVIL: ").append(ficha.getEstadoCivil()).append("\n").append("NATURALIDADE: ")
 				.append(ficha.getEndereco().getCidadeNatal()).append("\n").append("DATA DE NASCIMENTO: ")
 				.append(new Data().getStringDate(servidor.getDataNasc())).append("\n").append("CPF: ")
-				.append(servidor.getCpf()).append("\t\t\tRG: ").append(servidor.getCpf()).append("\n")
-				.append("FILIAÇÃO\n");
+				.append(servidor.getCpf()).append("                              RG: ").append(servidor.getCpf()).append("\n")
+				.append("\nFILIAÇÃO\n");
 
 		s.append("Pai: ").append(ficha.getNomePai()).append("\n").append("Mãe: ").append(ficha.getNomeMae())
 				.append("\n");
@@ -120,7 +120,7 @@ public class DeclaracaoFile {
 		Paragraph p8 = new Paragraph(s.toString());
 		doc.add(p8);
 		Paragraph p9 = new Paragraph(
-				"\n\n\n_______________________________________________________\n" + "João de Deus Oliveira");
+				"\n\n_______________________________________________________\n" + "João de Deus Oliveira");
 		p9.setBold();
 		p9.setTextAlignment(TextAlignment.CENTER);
 

@@ -44,13 +44,10 @@ public class CadastroServidorController implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-		/*
-		 * Button para adicionar e visualizar convenios permanece desativado ate que o
-		 * servidor na tela seja adicionado
-		 */
+
 		btnServidorConvenios.setDisable(true);
 		btnSalvar.setDisable(true);
-		
+
 		String[] opt1 = { "Solteiro(a)", "Casado(a)", "Divorciado(a)", "Viuvo(a)" };
 		cbEstadoCivil.getItems().addAll(opt1);
 		String[] opt2 = { "Masculino", "Feminino" };
@@ -63,22 +60,33 @@ public class CadastroServidorController implements Initializable {
 		ttsc.setFont(new Font(14));
 		btnServidorConvenios.setTooltip(ttsc);
 
-		// ativa button para visualizar e adicionar convenios
+		// ativa button para salvar ou atualizar o servidor
 		tfCpf.setOnKeyTyped(new EventHandler<Event>() {
 			@Override
 			public void handle(Event e) {
-				// TODO Auto-generated method stub
 				String cpf = tfCpf.getText();
 				if (new Servidor().isCpf(cpf)) {
-					if (!tfNome.getText().isBlank()) {
-						btnSalvar.setDisable(false);
-					}
-				}else {
+					btnSalvar.setDisable(false);
+
+				} else if (tfNome.getText().isBlank()) {
 					btnSalvar.setDisable(true);
+				} else {
+					if (!update) {
+						btnSalvar.setDisable(true);
+					}
 				}
 			}
 		});
-
+		tfDependentes.setOnKeyTyped(new EventHandler<Event>() {
+			@Override
+			public void handle(Event e) {
+				if (!tfDependentes.getText().isBlank() && isNumeric(tfDependentes.getText())) {
+					btnServidorConvenios.setDisable(false);
+				} else {
+					btnServidorConvenios.setDisable(true);
+				}
+			}
+		});
 	}
 
 	/**
@@ -86,9 +94,11 @@ public class CadastroServidorController implements Initializable {
 	 */
 	@FXML
 	private void adicionarServidor() {
+
 		if (update) {
 			System.out.println("Atualizando");
 		}
+
 		Ficha ficha = new Ficha();
 		Endereco endereco = new Endereco();
 		Servidor servidor = new Servidor();
@@ -98,9 +108,13 @@ public class CadastroServidorController implements Initializable {
 		servidor.setCpf(tfCpf.getText());
 		servidor.setRG(tfRG.getText());
 		servidor.setMatricula(tfMatricula.getText());
-		servidor.setQtdDependentes(Integer.parseInt("0" + tfDependentes.getText()));
 		servidor.setDataNasc(dataPickerNasc.getValue());
 		servidor.setDataAdmissao(dataPickerAdmissao.getValue());
+		if (!isNumeric(tfDependentes.getText()) || tfDependentes.getText().isBlank()) {
+			servidor.setQtdDependentes(0);
+		} else {
+			servidor.setQtdDependentes(Integer.parseInt(tfDependentes.getText()));
+		}
 
 		ficha.setTelefone(tfTelefone.getText());
 		ficha.setEstadoCivil(cbEstadoCivil.getSelectionModel().getSelectedItem());
@@ -122,12 +136,25 @@ public class CadastroServidorController implements Initializable {
 		if (update) {
 			// atualizar servidor no banco de dados
 			new ServidorDB().update(servidor);
+			if (!tfDependentes.getText().isBlank() && isNumeric(tfDependentes.getText()))
+				btnServidorConvenios.setDisable(false);
+			else
+				btnServidorConvenios.setDisable(true);
 		} else {
 			new ServidorDB().save(servidor);// salva servidor no banco de dados
-			// Ativa o botão para adicionar convenios
-			btnServidorConvenios.setDisable(false);
-		}
+			if (!tfDependentes.getText().isBlank() && isNumeric(tfDependentes.getText()))
+				btnServidorConvenios.setDisable(false);
+			else
+				btnServidorConvenios.setDisable(true);
 
+			update = true;
+		}
+		this.servidor = servidor;
+
+	}
+
+	private boolean isNumeric(String strNum) {
+		return strNum.matches("[0-9]");
 	}
 
 	@FXML
@@ -146,6 +173,8 @@ public class CadastroServidorController implements Initializable {
 	 * @param servidor
 	 */
 	public void setServidor(Servidor servidor) {
+		btnServidorConvenios.setDisable(false);
+		btnSalvar.setDisable(false);
 		this.servidor = servidor;
 		if (servidor != null) {
 			tfNome.setText(servidor.getNome());
@@ -198,8 +227,6 @@ public class CadastroServidorController implements Initializable {
 		btnSalvar.setTooltip(ttbs);
 
 		// ativa button para visualizar e adicionar convenios
-		btnServidorConvenios.setDisable(false);
-		btnSalvar.setDisable(false);
 		this.update = true;
 	}
 

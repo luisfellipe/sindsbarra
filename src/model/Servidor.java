@@ -101,7 +101,8 @@ public class Servidor extends Pessoa {
 		.append("Matricula: ").append(getMatricula()).append("\n")
 		.append("Data Nascimento: ").append(getDataNasc()).append("\n")
 		.append("Data Admissao: ").append(getDataAdmissao()).append("\n")
-		.append("Dependentes: ").append(getQtdDependentes());
+		.append("Dependentes: ").append(getQtdDependentes())
+		.append("Estado Civil: ").append(fi.getEstadoCivil());
 		
 		return  sb.toString();
 	}

@@ -3,6 +3,7 @@ package pdf;
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.text.DecimalFormat;
+import java.util.Iterator;
 import java.util.List;
 
 import com.itextpdf.io.image.ImageData;
@@ -10,6 +11,7 @@ import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
@@ -20,7 +22,7 @@ import model.Data;
 import model.ServidorConvenio;
 
 public class ConvenioFile {
-	private String RESULT = null, LOGO = "src/img/logo.png";
+	private String RESULT = null, LOGO = "src/assets/img/logox3.png";
 	private PdfDocument pdfDoc = null;
 	Document doc = null;
 	PdfWriter pdfWriter = null;
@@ -32,19 +34,14 @@ public class ConvenioFile {
 
 	private void createPdf() {
 		try {
-
 			pdfWriter = new PdfWriter(RESULT);
 			pdfDoc = new PdfDocument(pdfWriter);
 			doc = new Document(pdfDoc);
-
-			//
 			ImageData data = ImageDataFactory.create(LOGO);
 			Image image = new Image(data);
-			image.setHeight(187);
-			image.setWidth(698);
+			image.setHeight(119);
+			image.setWidth(520);
 			doc.add(image);
-
-			//
 
 		} catch (FileNotFoundException | MalformedURLException e) {
 			// TODO Auto-generated catch block
@@ -62,35 +59,62 @@ public class ConvenioFile {
 		Paragraph p = new Paragraph(texto);
 		p.setTextAlignment(TextAlignment.CENTER);
 		doc.add(p);
-		doc.add(new Paragraph("\n"));
 
 		float[] pointColumnWidths = { 80F, 280F, 80F, 30F };
 		table = new Table(pointColumnWidths);
 		table.setFontSize(10);
-		table.setTextAlignment(TextAlignment.CENTER);
-		table.addCell("MATRICULA");
-		table.addCell("NOME");
-		table.addCell("VALOR");
-		table.addCell("DATA ADESÃO");
-		double total = 0, valor = 0;
-		for (ServidorConvenio sc : scList) {
-			table.addCell(sc.getServidor().getMatricula());
-			table.addCell(sc.getServidor().getNome());
-			valor = sc.getValor();
-			table.addCell("R$ "+ valor);
-			table.addCell(new Data().getStringDate(sc.getConvenio().getDataAdesao()));
-			table.startNewRow();
-			total += valor;
-			 valor = 0;
+
+		Text matricula = new Text("MATRICULA");
+		matricula.setBold();
+		Cell c_matricula = new Cell();
+		c_matricula.add(new Paragraph(matricula).setTextAlignment(TextAlignment.CENTER));
+		table.addCell(c_matricula);
+
+		Text nome = new Text("NOME");
+		nome.setBold();
+		Cell c_nome = new Cell();
+		c_nome.add(new Paragraph(nome).setTextAlignment(TextAlignment.CENTER));
+		table.addCell(c_nome);
+
+		Text valor = new Text("VALOR");
+		valor.setBold();
+		Cell c_valor = new Cell();
+		c_valor.add(new Paragraph(valor).setTextAlignment(TextAlignment.CENTER));
+		table.addCell(c_valor);
+
+		Text adesao = new Text("DATA ADESÃO");
+		adesao.setBold();
+		adesao.setBold();
+		Cell c_adesao = new Cell();
+		c_adesao.add(new Paragraph(adesao).setTextAlignment(TextAlignment.CENTER));
+		table.addCell(c_adesao);
+
+		double total = 0, val = 0;
+		ServidorConvenio sc = null;
+		Iterator<ServidorConvenio> it = scList.iterator();
+		while (it.hasNext()) {
+			sc = it.next();
+			if (sc.getValor() != 0) {
+				table.addCell(new Cell()
+						.add(new Paragraph(sc.getServidor().getMatricula()).setTextAlignment(TextAlignment.CENTER)));
+
+				table.addCell(sc.getServidor().getNome());
+				val = sc.getValor();
+				table.addCell(new Cell().add(new Paragraph("R$ " + val)).setTextAlignment(TextAlignment.CENTER));
+				table.addCell(new Cell().add(new Paragraph(new Data().getStringDate(sc.getConvenio().getDataAdesao()))
+						.setTextAlignment(TextAlignment.CENTER)));
+				total += val;
+				val = 0;
+				if (it.hasNext()) {
+					table.startNewRow();
+				}
+			}
 		}
 		doc.add(table);
-		
 		doc.add(new Paragraph("\n"));
 		DecimalFormat df = new DecimalFormat("0.00");
-		Text totalTexto = new Text("Total:  R$ " + 	df.format(total));
+		Text totalTexto = new Text("Total:  R$ " + df.format(total));
 		doc.add(new Paragraph(totalTexto));
-		
-
 		doc.close();
 	}
 

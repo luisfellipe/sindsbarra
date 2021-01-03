@@ -6,7 +6,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
 public class TelaConvenio extends Application {
 	private Parent rootLayout;
 	FXMLLoader loader = null;
@@ -18,9 +17,9 @@ public class TelaConvenio extends Application {
 			loader = new FXMLLoader(getClass().getResource(resource));
 			rootLayout = (Parent) loader.load();
 			Scene scene = new Scene(rootLayout);
+			stage.setResizable(false);
 			stage.setScene(scene);
 			stage.show();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -45,6 +45,9 @@ public class ConvenioDB {
 	}
 
 	public void delete(Convenio convenio) {
+		// deleta todos os convenios dos servidores
+		new ServidorDB().deleteConvenio(convenio.getNome());
+
 		String query = "DELETE FROM convenio WHERE nome=?;";
 		conn = DriveManager.getConnection();
 		try {
@@ -52,14 +55,12 @@ public class ConvenioDB {
 			pstmt.setString(1, convenio.getNome());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			DriveManager.close();
 		} finally {
 			try {
 				conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -79,13 +80,11 @@ public class ConvenioDB {
 			pstmt.setString(6, convenio.getNome());
 			pstmt.executeQuery();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
 				conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -146,13 +145,11 @@ public class ConvenioDB {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
 			conn.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

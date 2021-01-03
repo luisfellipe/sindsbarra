@@ -10,7 +10,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="443.0" prefWidth="600.0" stylesheets="@../assets/css/application.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CadastroConvenioController">
    <children>
-      <Button id="btnSalvar" layoutX="472.0" layoutY="389.0" mnemonicParsing="false" onAction="#salvarConvenio" prefHeight="30.0" prefWidth="96.0" stylesheets="@../assets/css/application.css" text="Salvar">
+      <Button id="btnSalvar" fx:id="btnSalvar" layoutX="472.0" layoutY="389.0" mnemonicParsing="false" onAction="#salvarConvenio" prefHeight="30.0" prefWidth="96.0" stylesheets="@../assets/css/application.css" text="Salvar">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>

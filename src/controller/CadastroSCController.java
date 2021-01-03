@@ -28,14 +28,13 @@ public class CadastroSCController implements Initializable {
 		new ConvenioDB().getAll().forEach(c -> {
 			cbConvenios.getItems().add(c.getNome());
 		});
-		cbConvenios.getItems().add("                                                              ");
-
 	}
 
 	@FXML
 	private void onActionOk() {
 		String nome = cbConvenios.getSelectionModel().getSelectedItem();
 		Convenio convenio = new ConvenioDB().select(nome.trim());
+		System.out.println("N " + servidor.getNome() + " D" + servidor.getQtdDependentes());
 		ServidorConvenio sc = new ServidorConvenio(servidor, convenio);
 		new ServidorDB().saveServidorConvenio(sc);
 

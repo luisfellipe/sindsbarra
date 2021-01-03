@@ -1,8 +1,10 @@
 package controller;
 
+import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import dao.ConvenioDB;
@@ -10,13 +12,20 @@ import dao.ServidorDB;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Convenio;
 import model.ServidorConvenio;
+import pdf.ConvenioFile;
 import view.TelaCadastroConvenio;
 
 public class ConvenioController implements Initializable {
@@ -35,6 +44,8 @@ public class ConvenioController implements Initializable {
 	private MenuItem miAddConvenio;
 	@FXML
 	private MenuItem miRemoverConvenio;
+	@FXML
+	private Button btnFechar;
 	private List<Convenio> convenios = null;
 
 	@Override
@@ -48,7 +59,43 @@ public class ConvenioController implements Initializable {
 	}
 
 	@FXML
-	private void onActionNovo() {
+	private void fecharTela() {
+		Stage stage = (Stage) btnFechar.getScene().getWindow();
+		stage.close();
+	}
+
+	@FXML
+	private void imprimirLista() {
+		Convenio c = tabela.getSelectionModel().getSelectedItem();
+		List<ServidorConvenio> sclista = new ServidorDB().getAllServidorConvenio(c);
+
+		DirectoryChooser dirChooser = new DirectoryChooser();
+		Stage stage = new Stage();
+		stage.centerOnScreen();
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.setTitle("Salvar arquivo");
+		dirChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+		File file = dirChooser.showDialog(stage);
+
+		String RESULT = file.getAbsolutePath() + "/[" + c.getNome() + "]" + LocalDate.now().getDayOfMonth()
+				+ LocalDate.now().getMonthValue() + LocalDate.now().getYear() + ".pdf";
+		file.mkdirs();
+
+		ConvenioFile cf = new ConvenioFile(RESULT);
+		cf.addConvenioServidor(sclista);
+	}
+
+	@FXML
+	private void visualizarConvenio() {
+		Convenio c = tabela.getSelectionModel().getSelectedItem();
+		TelaCadastroConvenio tcc = new TelaCadastroConvenio();
+		tcc.setConvenio(c);
+		Stage stage = new Stage();
+		tcc.start(stage);
+	}
+
+	@FXML
+	private void novoConvenio() {
 		TelaCadastroConvenio tcc = new TelaCadastroConvenio();
 		Stage stage = new Stage();
 		tcc.start(stage);
@@ -56,20 +103,25 @@ public class ConvenioController implements Initializable {
 	}
 
 	@FXML
-	private void onActionRemover() {
-		Convenio c = tabela.getSelectionModel().getSelectedItem();
-		new ConvenioDB().delete(c);
-		update();
+	private void removerConvenio() {
+		Convenio convenio = tabela.getSelectionModel().getSelectedItem();
+		if (convenio != null) {
+			Alert a = new Alert(AlertType.CONFIRMATION);
+			a.setHeaderText("Remover Convênio?");
+			Optional<ButtonType> result = a.showAndWait();
+			if (result.get() == ButtonType.OK) {
+				new ConvenioDB().delete(convenio);
+				update();
+			}
+		}
+
 	}
+
 	@FXML
-	private void imprimirLista() {
-		Convenio c = tabela.getSelectionModel().getSelectedItem();
-		List<ServidorConvenio> sclista = new ServidorDB().getAllServidorConvenio(c);
-	}
-	
 	private void update() {
 		tabela.getItems().clear();
-		convenios = new ConvenioDB().getAll();
+		convenios.clear();
+		convenios.addAll(new ConvenioDB().getAll());
 		tabela.getItems().addAll(convenios);
 		tabela.refresh();
 	}

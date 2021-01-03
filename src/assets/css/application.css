@@ -2,33 +2,43 @@
 
 
 .rootLayout{
-	-fx-background-color: rgb(242,242,242);
+	-fx-background-color: rgb(242.0,242.0,242.0);
 }
 
 #btnFechar:hover{
-	-fx-background-color: rgb(230, 60, 19);
-	-fx-text-fill: rgb(255,255,255);
+	-fx-background-color: rgb(230.0, 60.0, 19.0);
+	-fx-text-fill: rgb(255.0,255.0,255.0);
 }
  #btnSalvar:hover{
-	-fx-background-color: rgb(22, 161, 10);
-	-fx-text-fill: rgb(255,255,255);
+	-fx-background-color: rgb(22.0, 161.0, 10.0);
+	-fx-text-fill: rgb(255.0,255.0,255.0);
 }
 #btnSalvar:pressed{
-	-fx-background-color: rgb(22, 180, 10);
-	-fx-text-fill: rgb(255,255,255);
+	-fx-background-color: rgb(22.0, 180.0, 10.0);
+	-fx-text-fill: rgb(255.0,255.0,255.0);
 }
 
 #btnFechar:pressed{
-	-fx-background-color: rgb(255, 30, 19);
-	-fx-text-fill: rgb(255,255,255);
+	-fx-background-color: rgb(255.0, 30.0, 19.0);
+	-fx-text-fill: rgb(255.0,255.0,255.0);
 }
 
 #btnLimpar:hover{
-	-fx-background-color: rgb(6, 141, 140);
-	-fx-text-fill: rgb(255,255,255);
+	-fx-background-color: rgb(6.0, 141.0, 140.0);
+	-fx-text-fill: rgb(255.0,255.0,255.0);
 }
 
 #btnLimpar:pressed{
-	-fx-background-color: rgb(6, 141, 186);
-	-fx-text-fill: rgb(255,255,255);
+	-fx-background-color: rgb(6.0, 141.0, 186.0);
+	-fx-text-fill: rgb(255.0,255.0,255.0);
 }
+
+/*----------------------------------- */
+ #nascColuna,  #admColuna, #cpfColuna, #matriculaColuna {
+	 -fx-alignment:center;
+}
+#tabela{
+    -fx-font-size:15.0px; 
+}
+
+

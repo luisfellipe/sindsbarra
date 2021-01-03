@@ -13,14 +13,14 @@
 
 <AnchorPane id="rootLayout" fx:id="rootLayout" prefHeight="694.0" prefWidth="1300.0" styleClass="rootLayout" stylesheets="@../assets/css/application.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TelaPrincipalController">
 	<children>
-		<TableView id="tabela" fx:id="tabela" editable="true" layoutX="100.0" layoutY="215.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="448.0" prefWidth="1094.0">
+		<TableView id="tabela" fx:id="tabela" editable="true" layoutY="215.0" prefHeight="478.0" prefWidth="1300.0">
 			<columns>
-				<TableColumn id="matriculaColuna" fx:id="matriculaColuna" maxWidth="128.0" minWidth="-1.0" prefWidth="128.0" text="Matricula" />
-				<TableColumn id="nomeColuna" fx:id="nomeColuna" maxWidth="370.0" minWidth="-1.0" prefWidth="342.0" text="Nome" />
-				<TableColumn id="funcaoColuna" fx:id="funcaoColuna" maxWidth="342.0" minWidth="-1.0" prefWidth="264.0" text="Funcao" />
-				<TableColumn id="cpfColuna" fx:id="cpfColuna" maxWidth="160.0" minWidth="-1.0" prefWidth="126.0" text="CPF" />
-            	<TableColumn fx:id="admissaoColuna" maxWidth="154.0" prefWidth="114.0" resizable="false" text="Admissao" />
-           		<TableColumn id="nascColuna" fx:id="nascColuna" editable="false" maxWidth="172.0" prefWidth="118.0" sortable="false" text="Nascimento" />
+				<TableColumn id="matriculaColuna" fx:id="matriculaColuna" maxWidth="128.0" minWidth="-1.0" prefWidth="122.0" text="Matricula" />
+				<TableColumn id="nomeColuna" fx:id="nomeColuna" maxWidth="459.0" minWidth="-1.0" prefWidth="459.0" text="Nome" />
+				<TableColumn id="funcaoColuna" fx:id="funcaoColuna" maxWidth="348.0" minWidth="-1.0" prefWidth="303.0" text="Cargo/Funcao" />
+				<TableColumn id="cpfColuna" fx:id="cpfColuna" maxWidth="270.0" minWidth="-1.0" prefWidth="159.0" text="CPF" />
+            	<TableColumn id="admColuna" fx:id="admissaoColuna" maxWidth="250.0" prefWidth="118.0" resizable="false" text="Admissao" />
+           		<TableColumn id="nascColuna" fx:id="nascColuna" editable="false" maxWidth="264.0" prefWidth="130.0" sortable="false" text="Nascimento" />
 			</columns>
 			<columnResizePolicy>
 				<!-- <TableView fx:constant="DEFAULT_MOUSE_TRANSPARENT" /> -->
@@ -38,7 +38,7 @@
 						<MenuItem mnemonicParsing="false" onAction="#adicionarConvenio" text="novo convênio" /><!--implementado-->
 						<SeparatorMenuItem mnemonicParsing="false" />
                   		<MenuItem mnemonicParsing="false" onAction="#atualizarTabela" text="Atualizar tabela" />
-           
+                  		<MenuItem mnemonicParsing="false" onAction="#imprimirRelacao" text="imprimir relação" />
 					</items>
 				</ContextMenu>
 			</contextMenu>
@@ -63,9 +63,9 @@
           </Menu>
         </menus>
       </MenuBar>
-      <ImageView fitHeight="152.0" fitWidth="546.0" layoutX="360.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="149.0" fitWidth="629.0" layoutX="336.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../assets/img/logonn.png" />
+            <Image url="@../assets/img/logox3.png" />
          </image>
       </ImageView>
 	</children>
