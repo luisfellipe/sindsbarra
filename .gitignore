@@ -1,9 +1,9 @@
 /bin/
+/nbproject/private/
+/teste/
 *.class
 *.csv
-/nbproject/private/
-*.classpath
-*.build*
-*.project
-/teste/
-/.settings/
+/.classpath
+.build*
+.project
+/.settings
