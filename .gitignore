@@ -2,7 +2,8 @@
 *.class
 *.csv
 /nbproject/private/
-.classpath
-.build*
-.project
+*.classpath
+*.build*
+*.project
 /teste/
+/.settings/
