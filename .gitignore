@@ -4,7 +4,6 @@
 *.class
 *.csv
 .classpath
-.build*
 .project
 .settings/
 *.log

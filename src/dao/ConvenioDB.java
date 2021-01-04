@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import model.Convenio;
 import model.Data;
 
@@ -29,19 +32,17 @@ public class ConvenioDB {
 			pstmt.setDate(3, dataManager.getDate(convenio.getDataAdesao()));
 			pstmt.setDouble(4, convenio.getValor());
 			pstmt.executeUpdate();
-			conn.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 
+		} catch (SQLException e) {
+			{
+				Alert a = new Alert(AlertType.ERROR);
+				a.setHeaderText("Falha ao salvar convenio!!");
+				a.setContentText(e.getMessage());
+				a.show();
+			}
+			e.printStackTrace();
+		}
+		DriveManager.close();
 	}
 
 	public void delete(Convenio convenio) {
@@ -55,15 +56,15 @@ public class ConvenioDB {
 			pstmt.setString(1, convenio.getNome());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			DriveManager.close();
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+			{
+				Alert a = new Alert(AlertType.ERROR);
+				a.setHeaderText("Falha ao deletar convênio!!");
+				a.setContentText(e.getMessage());
+				a.show();
 			}
+			e.printStackTrace();
 		}
+		DriveManager.close();
 	}
 
 	public void update(Convenio convenio, String nome) {
@@ -80,14 +81,15 @@ public class ConvenioDB {
 			pstmt.setString(6, convenio.getNome());
 			pstmt.executeQuery();
 		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+			{
+				Alert a = new Alert(AlertType.ERROR);
+				a.setHeaderText("Falha ao atualizar convênio!!");
+				a.setContentText(e.getMessage());
+				a.show();
 			}
+			e.printStackTrace();
 		}
+		DriveManager.close();
 	}
 
 	/*
@@ -111,14 +113,15 @@ public class ConvenioDB {
 				convenio.setDescricao(rs.getString("descricao"));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+			{
+				Alert a = new Alert(AlertType.ERROR);
+				a.setHeaderText("Falha ao selecionar convênio!!");
+				a.setContentText(e.getMessage());
+				a.show();
 			}
+			e.printStackTrace();
 		}
+		DriveManager.close();
 		return convenio;
 	}
 
@@ -133,7 +136,6 @@ public class ConvenioDB {
 
 			convenios = new ArrayList<Convenio>();
 			Convenio c = null;
-
 			Data dataManager = new Data();
 			while (rs.next()) {
 				c = new Convenio();
@@ -145,14 +147,15 @@ public class ConvenioDB {
 			}
 
 		} catch (SQLException e) {
+			{
+				Alert a = new Alert(AlertType.ERROR);
+				a.setHeaderText("Falha ao acessar convênios!!");
+				a.setContentText(e.getMessage());
+				a.show();
+			}
 			e.printStackTrace();
 		}
-		try {
-			conn.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
+		DriveManager.close();
 		return convenios;
 	}
 

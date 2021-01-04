@@ -10,12 +10,15 @@ import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.Style;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.property.TextAlignment;
+import com.itextpdf.kernel.colors.Color;
+import com.itextpdf.kernel.colors.WebColors;
 
 import model.Data;
 import model.Servidor;
@@ -52,7 +55,11 @@ public class ServidorFile {
 		createPdf();
 		Text texto = new Text("RELAÇÃO DE SERVIDORES SINDICALIZADOS");
 		texto.setBold();
-		texto.setFontSize(14);
+		Style style = new Style();
+		style.setBold();
+		style.setFontSize(11);
+		style.setUnderline();
+		texto.addStyle(style);
 
 		doc.add(new Paragraph("\n"));
 		Paragraph p1 = new Paragraph(texto);
@@ -62,8 +69,8 @@ public class ServidorFile {
 
 		float[] pointColumnWidths = { 50F, 160F, 130F, 30F, 50F, 80F };
 		table = new Table(pointColumnWidths);
-		table.setFontSize(10);
-
+		table.setFontSize(10);//tamanho da fonte do conteudo da tabela
+		
 		Text matricula = new Text("Matricula");
 		matricula.setFontSize(11);
 		matricula.setBold();
@@ -110,17 +117,17 @@ public class ServidorFile {
 		int totalServidores = 0;
 
 		Iterator<Servidor> it = servidores.iterator();
-		Servidor s;
+		Servidor serv = null;
 		while (it.hasNext()) {
-			s = it.next();
+			serv = it.next();
 
-			table.addCell(new Cell().add(new Paragraph(s.getMatricula()).setTextAlignment(TextAlignment.CENTER)));
-			table.addCell(s.getNome());
-			table.addCell(s.getFuncao());
-			table.addCell(new Data().getStringDate(s.getDataAdmissao()));
+			table.addCell(new Cell().add(new Paragraph(serv.getMatricula()).setTextAlignment(TextAlignment.CENTER)));
+			table.addCell(serv.getNome());
+			table.addCell(serv.getFuncao());
+			table.addCell(new Data().getStringDate(serv.getDataAdmissao()));
 			table.addCell(new Cell().add(
-					new Paragraph(new Data().getStringDate(s.getDataNasc())).setTextAlignment(TextAlignment.CENTER)));
-			table.addCell(new Cell().add(new Paragraph(s.getCpf()).setTextAlignment(TextAlignment.CENTER)));
+					new Paragraph(new Data().getStringDate(serv.getDataNasc())).setTextAlignment(TextAlignment.CENTER)));
+			table.addCell(new Cell().add(new Paragraph(serv.getCpf()).setTextAlignment(TextAlignment.CENTER)));
 
 			totalServidores++;
 			if (it.hasNext()) {
@@ -130,9 +137,10 @@ public class ServidorFile {
 
 		doc.add(table);
 
-		Text total = new Text("\nTotal de servidores: " + totalServidores);
-		total.setBold();
-		total.setFontSize(14);
+		Text total = new Text("\nTOTAL DE " + totalServidores + " SINDICALIZADOS");
+		Color color = WebColors.getRGBColor("yellow");
+		style.setBackgroundColor(color);
+		total.addStyle(style);
 		Paragraph p2 = new Paragraph(total);
 		p2.setTextAlignment(TextAlignment.LEFT);
 		doc.add(p2);

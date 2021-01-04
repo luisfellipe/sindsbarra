@@ -10,19 +10,24 @@ import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import dao.ConvenioDB;
+import dao.ModelCSV;
 import dao.ServidorDB;
 import model.Servidor;
 import pdf.DeclaracaoFile;
@@ -30,6 +35,7 @@ import pdf.ServidorFile;
 import view.TelaCadastroConvenio;
 import view.TelaCadastroServidor;
 import view.TelaConvenio;
+import view.TelaServidorConvenio;
 
 public class TelaPrincipalController implements Initializable {
 	@FXML
@@ -41,11 +47,8 @@ public class TelaPrincipalController implements Initializable {
 	private TableColumn<Servidor, String> nomeColuna, cpfColuna, nascColuna, admissaoColuna, matriculaColuna,
 			funcaoColuna;
 	@FXML
-	private Button btnPesquisar;
-	@FXML
-	private TextField tfPesquisar;
-	@FXML
-	private MenuButton mbConvenios;
+	private MenuItem miNovoUsuario, miExibirServidor, miExibirServConv, miRemoverServ, miGerarFicha, miExibirConv,
+			miNovoConvenio, miUpdateTable, miImprimirRelacao;
 
 	private ObservableList<Servidor> dadosDaTabela = null;
 
@@ -67,6 +70,16 @@ public class TelaPrincipalController implements Initializable {
 		dadosDaTabela = tabela.getItems();
 		// ordena por nome
 		dadosDaTabela.sort(Comparator.comparing(Servidor::getNome));
+		Scene scene = rootLayout.getScene();
+		miNovoUsuario.setAccelerator(KeyCombination.keyCombination("Shortcut + N"));
+		miExibirServidor.setAccelerator(KeyCombination.keyCombination("Shortcut + V"));
+		miExibirServConv.setAccelerator(KeyCombination.keyCombination("Shortcut + C"));
+		miRemoverServ.setAccelerator(KeyCombination.keyCombination("Shortcut + R"));
+		miGerarFicha.setAccelerator(KeyCombination.keyCombination("Shortcut + G"));
+		miExibirConv.setAccelerator(KeyCombination.keyCombination("alt + C"));
+		miNovoConvenio.setAccelerator(KeyCombination.keyCombination("alt + N"));
+		miUpdateTable.setAccelerator(KeyCombination.keyCombination("shift + U"));
+		miImprimirRelacao.setAccelerator(KeyCombination.keyCombination("Shortcut + I"));
 	}
 
 	/**
@@ -97,7 +110,7 @@ public class TelaPrincipalController implements Initializable {
 	}
 
 	@FXML
-	private void visualizarServidor() {
+	private void exibirServidor() {
 		String cpf = tabela.getSelectionModel().getSelectedItem().getCpf();
 		Servidor servidor = new ServidorDB().select(cpf);
 		if (servidor != null) {
@@ -108,6 +121,17 @@ public class TelaPrincipalController implements Initializable {
 			stage.initModality(Modality.APPLICATION_MODAL);
 			tcs.start(stage);
 		}
+	}
+
+	@FXML
+	private void exibirServidorConvenios() {
+		Servidor servidor = tabela.getSelectionModel().getSelectedItem();
+		TelaServidorConvenio tsc = new TelaServidorConvenio();
+		tsc.setServidor(servidor);
+		Stage stage = new Stage();
+		stage.centerOnScreen();
+		stage.initModality(Modality.APPLICATION_MODAL);
+		tsc.start(stage);
 	}
 
 	@FXML
@@ -177,5 +201,28 @@ public class TelaPrincipalController implements Initializable {
 		ServidorFile sf = new ServidorFile(RESULT);
 		sf.addServidor(servidores);
 
+	}
+
+	@FXML
+	private void exportarConveniosCSV() {
+		new ModelCSV().exportConvenios(new ConvenioDB().getAll());
+		Alert a = new Alert(AlertType.INFORMATION);
+		a.setHeaderText("Dados exportados!");
+		a.setContentText("Convenios exportados para arquivo csv!");
+		a.show();
+	}
+
+	@FXML
+	private void exportarServidoresCSV() {
+		new ModelCSV().exportServidores(new ServidorDB().selectAll());
+		Alert a = new Alert(AlertType.INFORMATION);
+		a.setHeaderText("Dados exportados!");
+		a.setContentText("Servidores exportados para arquivo csv!");
+		a.show();
+	}
+	@FXML
+	private void onActionFechar() {
+		Stage stage = (Stage) tabela.getScene().getWindow();
+		stage.close();
 	}
 }

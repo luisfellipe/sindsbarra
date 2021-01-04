@@ -71,6 +71,12 @@ public class ServidorDB {
 			 * servidor.getCpf()); a.setContentText("Servidor adicionado!!"); a.show(); }
 			 */
 		} catch (SQLException e) {
+			{
+				Alert a = new Alert(AlertType.ERROR);
+				a.setHeaderText("Falha ao salvar servidor!!");
+				a.setContentText(e.getMessage());
+				a.show();
+			}
 			e.printStackTrace();
 		}
 	}
@@ -119,6 +125,12 @@ public class ServidorDB {
 			}
 			DriveManager.close();
 		} catch (SQLException e) {
+			{
+				Alert a = new Alert(AlertType.ERROR);
+				a.setHeaderText("Falha ao acessar banco de dados!!");
+				a.setContentText(e.getMessage());
+				a.show();
+			}
 			e.printStackTrace();
 		}
 		return s;
@@ -231,7 +243,6 @@ public class ServidorDB {
 				s.setCpf(rs.getString("cpf"));
 				s.setRG(rs.getString("rg"));
 				// Converte Date em LocalDate
-
 				s.setDataAdmissao(dataManager.getLocalDate(rs.getDate("data_admissao")));
 				s.setDataNasc(dataManager.getLocalDate(rs.getDate("data_nasc")));
 				s.setFuncao(rs.getString("funcao"));
@@ -255,12 +266,18 @@ public class ServidorDB {
 				enderecoServidor.setRua(rs.getString("rua"));
 				enderecoServidor.setNumero(rs.getInt("numero_rua"));
 				fichaServidor.setEndereco(enderecoServidor);
+				s.setFicha(fichaServidor);
 				servidores.add(s);
 			}
 			DriveManager.close();
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			{
+				Alert a = new Alert(AlertType.ERROR);
+				a.setHeaderText("Falha ao acessar banco de dados!!");
+				a.setContentText(e.getMessage());
+				a.show();
+			}
 			e.printStackTrace();
 		}
 		return servidores;
@@ -286,6 +303,12 @@ public class ServidorDB {
 			pstmt.executeUpdate();
 			DriveManager.close();
 		} catch (SQLException e) {
+			{
+				Alert a = new Alert(AlertType.ERROR);
+				a.setHeaderText("Falha ao salvar convenio!!");
+				a.setContentText(e.getMessage());
+				a.show();
+			}
 			e.printStackTrace();
 		}
 	}
@@ -305,10 +328,15 @@ public class ServidorDB {
 			while (rs.next()) {
 				sc = new ServidorConvenio(servidor, cvDB.select(rs.getString("codigo_convenio")));
 				sclist.add(sc);
-
 			}
 			DriveManager.close();
 		} catch (SQLException e) {
+			{
+				Alert a = new Alert(AlertType.ERROR);
+				a.setHeaderText("Falha ao acessar banco de dados!!");
+				a.setContentText(e.getMessage());
+				a.show();
+			}
 			e.printStackTrace();
 		}
 		return sclist;
@@ -329,10 +357,15 @@ public class ServidorDB {
 			while (rs.next()) {
 				sc = new ServidorConvenio(sDB.select(rs.getString("codigo_servidor")), convenio);
 				sclist.add(sc);
-
 			}
 			DriveManager.close();
 		} catch (SQLException e) {
+			{
+				Alert a = new Alert(AlertType.ERROR);
+				a.setHeaderText("Falha ao acessar banco de dados!!");
+				a.setContentText(e.getMessage());
+				a.show();
+			}
 			e.printStackTrace();
 		}
 		return sclist;
@@ -347,6 +380,12 @@ public class ServidorDB {
 			pstmt.executeUpdate();
 			DriveManager.close();
 		} catch (SQLException e) {
+			{
+				Alert a = new Alert(AlertType.ERROR);
+				a.setHeaderText("Falha ao acessar banco de dados!!");
+				a.setContentText(e.getMessage());
+				a.show();
+			}
 			e.printStackTrace();
 			return false;
 		}
@@ -362,6 +401,12 @@ public class ServidorDB {
 			pstmt.executeUpdate();
 			DriveManager.close();
 		} catch (SQLException e) {
+			{
+				Alert a = new Alert(AlertType.ERROR);
+				a.setHeaderText("Falha ao acessar banco de dados!!");
+				a.setContentText(e.getMessage());
+				a.show();
+			}
 			e.printStackTrace();
 			return false;
 		}

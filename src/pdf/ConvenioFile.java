@@ -113,8 +113,12 @@ public class ConvenioFile {
 		doc.add(table);
 		doc.add(new Paragraph("\n"));
 		DecimalFormat df = new DecimalFormat("0.00");
-		Text totalTexto = new Text("Total:  R$ " + df.format(total));
+		Text totalTexto = new Text("Total ..................................................................................................."
+				+ "   R$ " + df.format(total));
 		doc.add(new Paragraph(totalTexto));
+		
+		Text assText = new Text("\n\n\nJoão de Deus Oliveira\nPresidente Sindsbarra");
+		doc.add(new Paragraph(assText).setTextAlignment(TextAlignment.RIGHT));
 		doc.close();
 	}
 
