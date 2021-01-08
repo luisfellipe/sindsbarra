@@ -1,6 +1,7 @@
 /bin/
 /nbproject/private/
 /teste/
+/target/
 *.class
 *.csv
 .classpath

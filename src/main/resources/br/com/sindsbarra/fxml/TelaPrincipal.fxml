@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="rootLayout" prefHeight="694.0" prefWidth="1300.0" styleClass="rootLayout" stylesheets="@../assets/css/application.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.sindsbarra.controller.TelaPrincipalController">
+	<children>
+		<TableView id="tabela" fx:id="tabela" editable="true" layoutY="215.0" minHeight="480.0" minWidth="1300.0">
+			<columns>
+				<TableColumn id="matriculaColuna" fx:id="matriculaColuna" maxWidth="128.0" minWidth="-1.0" prefWidth="122.0" text="Matricula" />
+				<TableColumn id="nomeColuna" fx:id="nomeColuna" maxWidth="459.0" minWidth="-1.0" prefWidth="459.0" text="Nome" />
+				<TableColumn id="funcaoColuna" fx:id="funcaoColuna" maxWidth="348.0" minWidth="-1.0" prefWidth="303.0" text="Cargo/Funcao" />
+				<TableColumn id="cpfColuna" fx:id="cpfColuna" maxWidth="270.0" minWidth="-1.0" prefWidth="159.0" text="CPF" />
+				<TableColumn id="admColuna" fx:id="admissaoColuna" maxWidth="250.0" prefWidth="118.0" resizable="false" text="Admissao" />
+				<TableColumn id="nascColuna" fx:id="nascColuna" editable="false" maxWidth="264.0" prefWidth="130.0" sortable="false" text="Nascimento" />
+			</columns>
+			<columnResizePolicy>
+				<!-- <TableView fx:constant="DEFAULT_MOUSE_TRANSPARENT" /> -->
+			</columnResizePolicy>
+			<contextMenu>
+				<ContextMenu>
+					<items>
+						<MenuItem fx:id="miNovoUsuario" onAction="#novoServidor" text="novo servidor" /> <!--abri tela de cadastro de um novo servidor -->
+						<SeparatorMenuItem />
+						<MenuItem fx:id="miExibirServidor" onAction="#exibirServidor" text="visualizar servidor" /> <!-- exibi informaçãoes do servidor -->
+						<MenuItem fx:id="miExibirServConv" onAction="#exibirServidorConvenios" text="convenios do servidor" /> <!-- exibi convenios do servidor -->
+						<MenuItem fx:id="miRemoverServ" onAction="#removerServidor" text="remover servidor" /> <!--remove servidor do sistema -->
+						<MenuItem fx:id="miGerarFicha" onAction="#gerarFichaServidor" text="gerar ficha" /> <!--gera uma ficha de filiação em pdf -->
+						<SeparatorMenuItem />
+						<MenuItem fx:id="miExibirConv" onAction="#exibirConvenios" text="convênios" /> <!-- exibi convenios do sistema -->
+						<MenuItem fx:id="miNovoConvenio" onAction="#adicionarConvenio" text="novo convênio" /><!-- abre tela para cadastro de um novo convenio-->
+						<SeparatorMenuItem />
+						<MenuItem fx:id="miImprimirRelacao" onAction="#imprimirRelacao" text="imprimir relação" /> <!-- Imprimi lista dos servidores cadastrados -->
+						<MenuItem fx:id="miUpdateTable" onAction="#atualizarTabela" text="Atualizar tabela" /> <!-- Sincroniza informações dos servidores com o banco de dados -->
+					</items>
+				</ContextMenu>
+			</contextMenu>
+
+
+		</TableView>
+		<MenuBar prefHeight="29.0" prefWidth="1300.0">
+			<menus>
+				<Menu mnemonicParsing="false" text="Arquivos">
+					<items>
+						<MenuItem onAction="#exportarServidoresCSV" text="exportar servidores para csv" />
+						<MenuItem onAction="#importarServidoresCSV" text="importar servidores de csv" />
+						<MenuItem onAction="#exportarConveniosCSV" text="exportar convenios para csv" />
+						<MenuItem onAction="#importarConveniosCSV" text="importar convenios de csv" />
+						<MenuItem onAction="#exportarServidorConvenioCSV" text="exportar cadastros Servidor Convenio para CSV" />
+						<MenuItem onAction="#importarServidorConvenioCSV" text="importar Cadastros Servidor Convenio de CSV" />
+						<MenuItem onAction="#fecharAplicacao" text="fechar aplicacao" />
+					</items>
+				</Menu>
+			</menus>
+		</MenuBar>
+		<ImageView fitHeight="149.0" fitWidth="629.0" layoutX="336.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true">
+			<image>
+				<Image url="@../assets/img/logox4.png" />
+			</image>
+		</ImageView>
+      <Label fx:id="lbQtdServidores" layoutX="45.0" layoutY="92.0" style="-fx-background-color: yellow;" text="..." textAlignment="CENTER" textFill="#018016">
+         <font>
+            <Font name="System Bold" size="30.0" />
+         </font>
+      </Label>
+      <Label layoutX="45.0" layoutY="136.0" text="Servidores">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbQtdConvenios" layoutX="1115.0" layoutY="92.0" style="-fx-background-color: yellow;" text="..." textAlignment="CENTER" textFill="#018016">
+         <font>
+            <Font name="System Bold" size="30.0" />
+         </font>
+      </Label>
+      <Label layoutX="1115.0" layoutY="136.0" text="Convenios">
+         <font>
+            <Font name="SansSerif Bold" size="22.0" />
+         </font>
+      </Label>
+	</children>
+</AnchorPane>

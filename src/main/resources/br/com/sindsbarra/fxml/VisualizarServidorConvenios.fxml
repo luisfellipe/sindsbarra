@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="864.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.sindsbarra.controller.ServidorConvenioController">
+   <children>
+      <TableView id="tabela" fx:id="tabela" layoutY="71.0" prefHeight="328.0" prefWidth="864.0" stylesheets="@../assets/css/application.css">
+        <columns>
+          <TableColumn id="tabela" fx:id="nomeColuna" maxWidth="700.0" minWidth="687.0" prefWidth="687.0" text="Nome" />
+            <TableColumn fx:id="valorColuna" prefWidth="166.0" text="Total" />
+        </columns>
+         <contextMenu>
+            <ContextMenu>
+              <items>
+             	<MenuItem fx:id="miAddConvenio" mnemonicParsing="false" onAction="#onActionAdicionar" text="adicionar" />
+              	<MenuItem fx:id="miRemoverConvenio" mnemonicParsing="false" onAction="#onActionRemover" text="remover" />
+              	<MenuItem fx:id="miAtualizar" mnemonicParsing="false" onAction="#update" text="atualizar" />
+                
+              </items>
+            </ContextMenu>
+         </contextMenu>
+      </TableView>
+      <Label layoutX="226.0" layoutY="14.0" text="Convenios do servidor " textFill="RED">
+         <font>
+            <Font name="System Bold" size="32.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbTotal" layoutX="8.0" layoutY="411.0" prefHeight="26.0" prefWidth="241.0" text="Total: R$ 0.00">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnFechar" layoutX="745.0" layoutY="411.0" mnemonicParsing="false" onAction="#fecharTela" stylesheets="@../assets/css/application.css" text="Fechar" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
