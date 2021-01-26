@@ -13,8 +13,9 @@
    <children>
       <TableView id="tabela" fx:id="tabela" layoutY="71.0" prefHeight="328.0" prefWidth="864.0" stylesheets="@../assets/css/application.css">
         <columns>
-          <TableColumn id="tabela" fx:id="nomeColuna" maxWidth="700.0" minWidth="687.0" prefWidth="687.0" text="Nome" />
-            <TableColumn fx:id="valorColuna" prefWidth="166.0" text="Total" />
+          <TableColumn id="tabela" fx:id="nomeColuna" maxWidth="700.0" minWidth="557.0" prefWidth="618.0" text="Nome" />
+            <TableColumn fx:id="valorColuna" prefWidth="116.0" text="Total" />
+            <TableColumn fx:id="dataAdesaoColuna" prefWidth="125.0" text="Data Adesao" />
         </columns>
          <contextMenu>
             <ContextMenu>
@@ -37,9 +38,9 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <Button fx:id="btnFechar" layoutX="745.0" layoutY="411.0" mnemonicParsing="false" onAction="#fecharTela" stylesheets="@../assets/css/application.css" text="Fechar" textAlignment="CENTER">
+      <Button fx:id="btnFechar" layoutX="721.0" layoutY="408.0" mnemonicParsing="false" onAction="#fecharTela" prefHeight="32.0" prefWidth="111.0" stylesheets="@../assets/css/application.css" text="Fechar" textAlignment="CENTER">
          <font>
-            <Font name="System Bold" size="20.0" />
+            <Font name="System Bold" size="16.0" />
          </font>
       </Button>
    </children>

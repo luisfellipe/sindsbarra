@@ -3,8 +3,6 @@ package br.com.sindsbarra.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -78,34 +76,34 @@ public class CadastroServidorController implements Initializable {
 		Endereco endereco = new Endereco();
 		Servidor servidor = new Servidor();
 		
-		Alert a = new Alert(AlertType.ERROR);
-		a.setHeaderText("Falha ao adcionar Servidor");
+		Alert alertError = new Alert(AlertType.ERROR);
+		alertError.setHeaderText("Falha ao adcionar Servidor");
 		
 		if (servidor.isCpf(tfCpf.getText()))
 			servidor.setCpf(tfCpf.getText());
 		else {
-			a.setContentText("Confira se o campo CPF esta correto!");
-			a.show();
+			alertError.setContentText("Confira se o campo CPF esta correto!");
+			alertError.show();
 			return;
 		}
 		if (!new Data().isNumeric(tfDependentes.getText())) {
-			a.setContentText("Confira se o campo Dependentes esta correto!");
-			a.show();
+			alertError.setContentText("Confira se o campo Dependentes esta correto!");
+			alertError.show();
 			return;
 		} else {
 			servidor.setQtdDependentes(Integer.parseInt(tfDependentes.getText()));
 		}
 		String estadoCivil = cbEstadoCivil.getSelectionModel().getSelectedItem();
 		if(estadoCivil == null) {
-			a.setContentText("Confira se o campo Estado Civil esta correto!");
-			a.show();
+			alertError.setContentText("Confira se o campo Estado Civil esta correto!");
+			alertError.show();
 			return;
 		}else ficha.setEstadoCivil(estadoCivil);
 		String sexo = cbSexo.getSelectionModel().getSelectedItem();
 		
 		if(sexo == null) {
-			a.setContentText("Confira se o campo Sexo esta correto!");
-			a.show();
+			alertError.setContentText("Confira se o campo Sexo esta correto!");
+			alertError.show();
 			return;
 		}else ficha.setSexo(sexo);
 		
@@ -131,18 +129,24 @@ public class CadastroServidorController implements Initializable {
 
 		ficha.setEndereco(endereco);
 		servidor.setFicha(ficha);
-
+		
+		Alert alertInfo = new Alert(AlertType.INFORMATION);
 		if (update) {
 			System.out.println("Atualizando Informações do Servidor . . .");
 			// atualizar servidor no banco de dados
-			new ServidorDB().update(servidor);
-
-			System.out.println("Informações do Servidor Atualizadas !!!");
+			if(new ServidorDB().update(servidor)) {
+				alertInfo.setHeaderText("Servidor Atualizado");
+				alertInfo.show();
+				System.out.println("Informações do Servidor Atualizadas !!!");
+			}else System.out.println("Erro ao atualizar Informações do Servidor . . .");
 
 		} else {
-			new ServidorDB().save(servidor);// salva servidor no banco de dados
 			System.out.println("Salvando Informações do Servidor . . .");
-			System.out.println("Informações do Servidor Salvas . . .");
+			if(new ServidorDB().save(servidor)) {// salva servidor no banco de dados
+				alertInfo.setHeaderText("Servidor Salvo no Banco de Dados!");
+				alertInfo.show();
+				System.out.println("Informações do Servidor Salvas . . .");
+			}else System.out.println("Erro ao Salvar Informações do Servidor . . .");
 		}
 		btnServidorConvenios.setDisable(false);
 		update = true;

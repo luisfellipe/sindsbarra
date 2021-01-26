@@ -6,7 +6,7 @@
 }
 
 #btnFechar:hover{
-	-fx-background-color: rgb(230.0, 60.0, 19.0);
+	-fx-background-color: rgb(230.0, 60.0, 19.0); 
 	-fx-text-fill: rgb(255.0,255.0,255.0);
 }
  #btnSalvar:hover{

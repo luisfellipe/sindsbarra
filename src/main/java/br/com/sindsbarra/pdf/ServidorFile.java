@@ -1,6 +1,7 @@
 package br.com.sindsbarra.pdf;
 
 import java.io.FileNotFoundException;
+import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.List;
 
@@ -136,13 +137,22 @@ public class ServidorFile {
 
 		doc.add(table);
 
-		Text total = new Text("\nTOTAL DE " + totalServidores + " SINDICALIZADOS");
+		Text total = new Text("\nTOTAL DE " + totalServidores + " SINDICALIZADO(S)");
 		Color color = WebColors.getRGBColor("yellow");
+		style.setFontSize(11);
 		style.setBackgroundColor(color);
 		total.addStyle(style);
 		Paragraph p2 = new Paragraph(total);
 		p2.setTextAlignment(TextAlignment.LEFT);
 		doc.add(p2);
+		
+		LocalDate data = LocalDate.now();
+		StringBuilder sb = new StringBuilder();
+		sb.append(data.getDayOfMonth()).append(" de ")
+		.append(new Data().getMes(data.getMonthValue())).append(" de ").append(data.getYear() + ".");
+		Paragraph p3 = new Paragraph(sb.toString());
+		p3.setTextAlignment(TextAlignment.RIGHT);
+		doc.add(p3);
 		doc.close();
 	}
 

@@ -1,10 +1,15 @@
 package br.com.sindsbarra.models;
 import java.time.LocalDate;
 public class Convenio {
-	private String nomeConvenio, descricao;
-	private LocalDate dataAdesao;
-	private Double valor;
+	private String nomeConvenio = null, descricao = null;
+	private LocalDate dataAdesao = null;
+	private Double valor = null;
+	private Long codigo = null;
+	private boolean dependentesInclude = false;
 
+	public Convenio(Long codigo) {
+		this.codigo = codigo;
+	}
 
 	/**
 	 * @return the nome
@@ -49,6 +54,20 @@ public class Convenio {
 	}
 
 	/**
+	 * @return the incluiDependentes
+	 */
+	public boolean isDependentesInlude() {
+		return dependentesInclude;
+	}
+
+	/**
+	 * @param incluiDependentes the incluiDependentes to set
+	 */
+	public void includeDependentes(boolean dependentesInclude) {
+		this.dependentesInclude = dependentesInclude;
+	}
+
+	/**
 	 * @return the descricao
 	 */
 	public String getDescricao() {
@@ -60,5 +79,9 @@ public class Convenio {
 	 */
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+
+	public Long getCodigo() {
+		return codigo;
 	}
 }

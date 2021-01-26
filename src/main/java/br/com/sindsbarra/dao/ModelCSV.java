@@ -9,11 +9,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -30,9 +34,14 @@ public class ModelCSV {
 
 	private String servidoresHeader = "cpf;matricula;nome;rg;funcao;data_admissao;data_nascimento;dependentes;estado civil;sexo;nome_mae;"
 			+ "nome_pai;telefone;estado;cidade natal;cidade atual;cep;bairro;rua;numero";
-	private String conveniosHeader = "nome;valor;data adesao;descricao";
-	private String servconvHeader = "cpf;nome convenio";
+	private String conveniosHeader = "codigo;nome;valor;data adesao;descricao";
+	private String servconvHeader = "convenio;codigo;cpf;data adesao;valor;";
 
+	/**
+	 * Importa ServidorConvenio para arquivo CSV
+	 * 
+	 * @return List<ServidorConvenio>
+	 */
 	public List<ServidorConvenio> importservidorConvenio() {
 
 		CSVReader csvReader = getCSVReader(chooserFile());
@@ -44,47 +53,66 @@ public class ModelCSV {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String[] nextLine;
 
 		List<ServidorConvenio> sclist = new ArrayList<ServidorConvenio>(lines.size());
 
 		ServidorConvenio serv_conv = null;
-		Servidor servidor;
-		Convenio convenio;
-		ServidorDB sDB = new ServidorDB();
-		ConvenioDB cDB = new ConvenioDB();
-		boolean first = true;
-		for (String[] line : lines) {
-			if (first) {
-				first = false;
-				continue;
+		
+		String line[] = null;
+		Iterator<String[]> it = lines.iterator();
+		it.next();
+		
+		Double valor = null;
+		LocalDate dataAdesao = null;
+		Data data = new Data();
+		synchronized (it) {
+			while (it.hasNext()) {
+				line = it.next();
+				dataAdesao = data.getLocalDate(line[3]);
+				valor = Double.valueOf(line[4]);
+				serv_conv = new ServidorConvenio(line[1],Long.parseLong(line[0]),line[2], dataAdesao, valor);
+				sclist.add(serv_conv);
 			}
-			servidor = sDB.select(line[0]);
-			convenio = cDB.select(line[1]);
-			serv_conv = new ServidorConvenio(servidor, convenio);
-			sclist.add(serv_conv);
 		}
 		return sclist;
 	}
 
-	public void exportServidorConvenio(List<ServidorConvenio> scList) {
+	/**
+	 * Exporta ServidorConvenio para arquivo CSV
+	 * 
+	 * @param List<ServidorConvenio> scList
+	 * @return true se ação ocorreu corretamente
+	 */
+	public boolean exportServidorConvenio(List<ServidorConvenio> scList) {
+		if (!messagemDeAviso()) {
+			return false;
+		}
 		List<String[]> allLines = new ArrayList<String[]>(scList.size() + 1);
 		allLines.add(servconvHeader.toUpperCase().split(";"));
 
 		Data data = new Data();
 		String line[] = null;
 		for (ServidorConvenio sc : scList) {
-			line = new String[2];
-			line[0] = sc.getServidor().getCpf();
+			line = new String[5];
+			line[0] = sc.getCodigoConvenio()+"";
 			line[1] = sc.getNome();
+			line[2] = sc.getCpf();
+			line[3] = data.getStringDate(sc.getDataAdesao());
+			line[4] = sc.getValor()+"";
 			allLines.add(line);
 		}
 		CSVWriter csvWriter = getCSVWriter(
 				chooserDirectory("Cadastro Convenio dos Servidores" + LocalDate.now() + ".csv"));
 		csvWriter.writeAll(allLines);
 		closeCSVWriter(csvWriter);
+		return true;
 	}
 
+	/**
+	 * Importa Convenios de arquivo CSV
+	 * 
+	 * @return List<Convenio>
+	 */
 	public List<Convenio> importConvenios() {
 		CSVReader csvReader = getCSVReader(chooserFile());
 		List<String[]> lines = null;
@@ -95,47 +123,63 @@ public class ModelCSV {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String[] nextLine;
 
 		List<Convenio> convList = new ArrayList<Convenio>(lines.size());
 
+		String line[] = null;
 		Convenio convenio = null;
-		boolean first = true;
-		for (String[] line : lines) {
-			if (first) {
-				first = false;
-				continue;
+		Iterator<String[]> it = lines.iterator();
+		it.next();
+		Data data = new Data();
+		synchronized (it) {
+			while (it.hasNext()) {
+				line = it.next();
+				convenio = new Convenio(Long.parseLong(line[0]));
+				convenio.setNome(line[1]);
+				convenio.setValor(Double.parseDouble(line[2]));
+				convenio.setDataAdesao(data.getLocalDate(line[3]));
+				convenio.setDescricao(line[4]);
+				convList.add(convenio);
 			}
-			convenio = new Convenio();
-			convenio.setNome(line[0]);
-			convenio.setValor(Double.parseDouble(line[1]));
-			convenio.setDataAdesao(new Data().getLocalDate(line[2]));
-			convenio.setDescricao(line[3]);
-			convList.add(convenio);
 		}
 		return convList;
 	}
 
-	public void exportConvenios(List<Convenio> cList) {
-
+	/**
+	 * Exporta convenios para arquivo CSV
+	 * 
+	 * @param cList
+	 * @return List<Convenio>
+	 */
+	public boolean exportConvenios(List<Convenio> cList) {
+		if (!messagemDeAviso()) {
+			return false;
+		}
 		List<String[]> allLines = new ArrayList<String[]>(cList.size() + 1);
 		allLines.add(conveniosHeader.toUpperCase().split(";"));
 
 		Data data = new Data();
 		String line[] = null;
 		for (Convenio c : cList) {
-			line = new String[4];
-			line[0] = c.getNome();
-			line[1] = c.getValor().toString();
-			line[2] = data.getStringDate(c.getDataAdesao());
-			line[3] = c.getDescricao();
+			line = new String[5];
+			line[0] = c.getCodigo()+"";
+			line[1] = c.getNome();
+			line[2] = c.getValor().toString();
+			line[3] = data.getStringDate(c.getDataAdesao());
+			line[4] = c.getDescricao();
 			allLines.add(line);
 		}
-		CSVWriter csvWriter = getCSVWriter(chooserDirectory("Lista de Convenios" + LocalDate.now() + ".csv"));
+		CSVWriter csvWriter = getCSVWriter(chooserDirectory("[Lista de Convenios]" + LocalDate.now() + ".csv"));
 		csvWriter.writeAll(allLines);
 		closeCSVWriter(csvWriter);
+		return true;
 	}
 
+	/**
+	 * importa Servidores de arquivo CSV
+	 * 
+	 * @return List<Servidor>
+	 */
 	public List<Servidor> importServidores() {
 		CSVReader csvReader = getCSVReader(chooserFile());
 		List<String[]> lines = null;
@@ -147,7 +191,7 @@ public class ModelCSV {
 			e.printStackTrace();
 		}
 
-		List<Servidor> servidoresListista = new ArrayList<Servidor>(lines.size());
+		List<Servidor> servidoresLista = new ArrayList<Servidor>(lines.size());
 		Servidor servidor = null;
 		Data data = new Data();
 		String[] line = null;
@@ -157,7 +201,6 @@ public class ModelCSV {
 		synchronized (it) {
 			while (it.hasNext()) {
 				line = it.next();
-				toStrings(line);
 				servidor = new Servidor();
 				servidor.setCpf(line[0].trim());
 				servidor.setMatricula(line[1].trim());
@@ -166,7 +209,7 @@ public class ModelCSV {
 				servidor.setFuncao(line[4].trim());
 				servidor.setDataAdmissao(data.getLocalDate(line[5].trim()));
 				servidor.setDataNasc(data.getLocalDate(line[6].trim()));
-				servidor.setQtdDependentes(new Data().isNumeric(line[7].trim())?Integer.parseInt(line[7].trim()): 0);
+				servidor.setQtdDependentes(new Data().isNumeric(line[7].trim()) ? Integer.parseInt(line[7].trim()) : 0);
 
 				Ficha ficha = new Ficha();
 				ficha.setEstadoCivil(line[8].trim());
@@ -182,25 +225,28 @@ public class ModelCSV {
 				endereco.setCep(line[16].trim());
 				endereco.setBairro(line[17].trim());
 				endereco.setRua(line[18].trim());
-				endereco.setNumero(new Data().isNumeric(line[19].trim())?Integer.parseInt(line[19].trim()): null);
+				endereco.setNumero(new Data().isNumeric(line[19].trim()) ? Integer.parseInt(line[19].trim()) : null);
 				ficha.setEndereco(endereco);
 				servidor.setFicha(ficha);
 				new ServidorDB().save(servidor);
-				servidoresListista.add(servidor);
+				servidoresLista.add(servidor);
 			}
 
 		}
-		
-		return servidoresListista;
-	}
-	private void toStrings(String[] words) {
-		for(String w: words) {
-			System.out.print(w + " ");
-		}
-		System.out.println("\n");
+
+		return servidoresLista;
 	}
 
-	public void exportServidores(List<Servidor> sList) {
+	/**
+	 * Exporta Servidor para arquivo CSV
+	 * 
+	 * @param sList
+	 * @return true se ação ocorreu corretamente
+	 */
+	public boolean exportServidores(List<Servidor> sList) {
+		if (!messagemDeAviso()) {
+			return false;
+		}
 		List<String[]> allLines = new ArrayList<String[]>(sList.size() + 1);
 		allLines.add(servidoresHeader.toUpperCase().split(" ;"));
 
@@ -237,10 +283,15 @@ public class ModelCSV {
 		CSVWriter csvWriter = getCSVWriter(chooserDirectory("Lista de Servidores" + LocalDate.now() + ".csv"));
 		csvWriter.writeAll(allLines);
 		closeCSVWriter(csvWriter);
+		return true;
 	}
 
-	///////////// opencsv//////////////
-
+	///////////// opencsv //////////////
+	/**
+	 * 
+	 * @param file
+	 * @return Escritor de arquivo CSV
+	 */
 	private CSVReader getCSVReader(File file) {
 
 		FileReader fr = null;
@@ -257,6 +308,11 @@ public class ModelCSV {
 		return csvReader;
 	}
 
+	/**
+	 * 
+	 * @param file
+	 * @return Escritor de arquivo CSV
+	 */
 	private CSVWriter getCSVWriter(File file) {
 		FileWriter fr = null;
 		CSVWriter csvWriter = null;
@@ -271,6 +327,11 @@ public class ModelCSV {
 		return csvWriter;
 	}
 
+	/**
+	 * 
+	 * @param fileName
+	 * @return Diretorio selecionando
+	 */
 	private File chooserDirectory(String fileName) {
 		DirectoryChooser dirChooser = new DirectoryChooser();
 		Stage stage = new Stage();
@@ -289,6 +350,10 @@ public class ModelCSV {
 		return file;
 	}
 
+	/**
+	 * 
+	 * @return Arquivo escolhido
+	 */
 	private File chooserFile() {
 		FileChooser fileChooser = new FileChooser();
 		Stage stage = new Stage();
@@ -297,7 +362,6 @@ public class ModelCSV {
 		stage.setTitle("Salvar arquivo");
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 		File file = (File) fileChooser.showOpenDialog(stage);
-
 		return file;
 	}
 
@@ -327,6 +391,24 @@ public class ModelCSV {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Exibi menssagem de aviso ao salvar arquivo CSV
+	 * 
+	 * @return true se usuario deseja continuar
+	 */
+	private boolean messagemDeAviso() {
+		Alert a = new Alert(AlertType.CONFIRMATION);
+		a.setHeaderText("Antes de exportas os dados em CSV");
+		a.setContentText("Todos os dados devem estar preenchidos para que possam ser importados futuramente!"
+				+ "\nApos exportados não altere o arquivo!!");
+		Optional<ButtonType> result = a.showAndWait();
+
+		if (result.get() == ButtonType.CANCEL) {
+			return false;
+		}
+		return true;
 	}
 
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuItem?>
@@ -8,22 +9,22 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="522.0" prefWidth="744.0" stylesheets="@../assets/css/application.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.sindsbarra.controller.ConvenioController">
+<AnchorPane prefHeight="538.0" prefWidth="744.0" stylesheets="@../assets/css/application.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.sindsbarra.controller.ConvenioController">
    <children>
-      <TableView id="tabela" fx:id="tabela" layoutX="10.0" layoutY="78.0" prefHeight="433.0" prefWidth="721.0" stylesheets="@../assets/css/application.css">
+      <TableView id="tabela" fx:id="tabela" layoutY="78.0" prefHeight="396.0" prefWidth="744.0" stylesheets="@../assets/css/application.css">
         <columns>
-          <TableColumn fx:id="nomeColuna" prefWidth="468.0" text="Nome" />
-            <TableColumn fx:id="valorColuna" prefWidth="113.0" text="Valor" />
-          <TableColumn fx:id="dataAdesaoColuna" prefWidth="157.0" style="-fx-alignment: center;" text="Data Adesao" />
+          <TableColumn fx:id="nomeColuna" prefWidth="478.0" text="Nome" />
+            <TableColumn fx:id="valorColuna" prefWidth="146.0" text="Valor" />
+          <TableColumn fx:id="dataAdesaoColuna" prefWidth="117.0" style="-fx-alignment: center;" text="Data Adesao" />
         </columns>
          <contextMenu>
             <ContextMenu>
               <items>
-                <MenuItem fx:id="miNovoConvenio" mnemonicParsing="false" text="novo" onAction="#novoConvenio"/>
-                <MenuItem fx:id="miExibirConvenio" mnemonicParsing="false" text="visualizar" onAction="#exibirConvenio"/>
-                <MenuItem fx:id="miRemoverConvenio" mnemonicParsing="false" text="remover" onAction="#removerConvenio"/>
-                <MenuItem fx:id="miUpdateTabela" mnemonicParsing="false" text="atualizar tabela" onAction="#update"/>
-                <MenuItem fx:id="miImprimirRelacao" mnemonicParsing="false" text="imprimir relação" onAction="#imprimirLista"/>
+                <MenuItem fx:id="miNovoConvenio" mnemonicParsing="false" onAction="#novoConvenio" text="novo" />
+                <MenuItem fx:id="miExibirConvenio" mnemonicParsing="false" onAction="#exibirConvenio" text="visualizar" />
+                <MenuItem fx:id="miRemoverConvenio" mnemonicParsing="false" onAction="#removerConvenio" text="remover" />
+                <MenuItem fx:id="miUpdateTabela" mnemonicParsing="false" onAction="#atualizarTabela" text="atualizar tabela" />
+                <MenuItem fx:id="miImprimirRelacao" mnemonicParsing="false" onAction="#imprimirLista" text="imprimir relação" />
               </items>
             </ContextMenu>
          </contextMenu>
@@ -33,5 +34,10 @@
             <Font name="System Bold" size="32.0" />
          </font>
       </Label>
+      <Button fx:id="btnFechar" layoutX="314.0" layoutY="491.0" mnemonicParsing="false" onAction="#fecharTela" prefHeight="33.0" prefWidth="139.0" text="Fechar">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

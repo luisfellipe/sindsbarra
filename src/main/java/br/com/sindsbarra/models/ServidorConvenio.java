@@ -1,5 +1,7 @@
 package br.com.sindsbarra.models;
 
+import java.time.LocalDate;
+
 /**
  * Esta classe mantem uma relação entre Servidor e Convenio
  * 
@@ -7,25 +9,22 @@ package br.com.sindsbarra.models;
  *
  */
 public class ServidorConvenio {
-	private Servidor servidor = null;
-	private Convenio convenio = null;
-	private String nome = null;
-	private Double valor = 0.0;
+	private String nome = null, cpf = null;
+	private Double valor = null;
+	private Long codigoConvenio = null;
+	private LocalDate dataAdesao = null;
 
-	public ServidorConvenio(Servidor servidor, Convenio conv) {
-		this.servidor = servidor;
-		this.convenio = conv;
-		nome = convenio.getNome();
-		valor = convenio.getValor() * servidor.getQtdDependentes();
+	public ServidorConvenio(String nomeConvenio,Long codigoConvenio, String cpf, LocalDate dataAdesao, Double valor) {
+		this.nome = nomeConvenio;
+		this.valor = valor;
+		this.dataAdesao = dataAdesao;
+		this.cpf = cpf;
+		this.codigoConvenio = codigoConvenio;
 
 	}
 
-	public Servidor getServidor() {
-		return servidor;
-	}
-
-	public Convenio getConvenio() {
-		return convenio;
+	public LocalDate getDataAdesao() {
+		return dataAdesao;
 	}
 
 	public Double getValor() {
@@ -34,5 +33,18 @@ public class ServidorConvenio {
 
 	public String getNome() {
 		return nome;
+	}
+	public String getCpf() {
+		return cpf;
+	}
+	/**
+	 * @return the codigoConvenio
+	 */
+	public Long getCodigoConvenio() {
+		return codigoConvenio;
+	}
+
+	public void setValor(Double valor) {
+		this.valor = valor;
 	}
 }

@@ -7,10 +7,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-
 import br.com.sindsbarra.models.Convenio;
 import br.com.sindsbarra.models.Data;
 import br.com.sindsbarra.models.Endereco;
@@ -22,8 +20,18 @@ public class ServidorDB {
 	private Connection conn = null;
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
+	Data data = null;
+	Alert alertError = null;
+	Alert alertSuccess = null;
 
-	public void save(Servidor servidor) {
+	public ServidorDB() {
+		alertError = new Alert(AlertType.ERROR);
+		alertError.setHeaderText("Falha ao acessar banco de dados!!");
+		alertSuccess = new Alert(AlertType.INFORMATION);
+		data = new Data();
+	}
+
+	public boolean save(Servidor servidor) {
 		String saveServidor = "INSERT INTO servidor (nome, cpf, rg, matricula,funcao, dependentes, data_admissao, data_nasc, nome_pai, nome_mae, "
 				+ "sexo, cidade_natal, estado_civil, telefone, estado, cidade_atual, cep, bairro, rua, numero_rua)"
 				+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?);";
@@ -67,44 +75,37 @@ public class ServidorDB {
 			pstmt.setInt(20, fichaServidor.getEndereco().getNumero());
 			pstmt.execute();
 			DataBase.close();
-			/*
-			 * { Alert a = new Alert(AlertType.INFORMATION); a.setHeaderText("ID: " +
-			 * servidor.getCpf()); a.setContentText("Servidor adicionado!!"); a.show(); }
-			 */
 		} catch (SQLException e) {
-			{
-				Alert a = new Alert(AlertType.ERROR);
-				a.setHeaderText("Falha ao salvar servidor!!");
-				a.setContentText(e.getMessage());
-				a.show();
-			}
+			alertError.setContentText(e.getMessage());
+			alertError.show();
 			e.printStackTrace();
+			return false;
 		}
+		return true;
 	}
 
-	public Servidor select(String codigo) {
+	public Servidor select(String codigoServidor) {
 		String query = "SELECT * FROM servidor WHERE cpf=? OR matricula=? OR nome=?";
-		Servidor s = null;
+		Servidor servidor = null;
 		conn = DataBase.getConnection();
 		try {
 			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, codigo);
-			pstmt.setString(2, codigo);
-			pstmt.setString(3, codigo);
+			pstmt.setString(1, codigoServidor);
+			pstmt.setString(2, codigoServidor);
+			pstmt.setString(3, codigoServidor);
 			rs = pstmt.executeQuery();
 
-			s = new Servidor();
+			servidor = new Servidor();
 			while (rs.next()) {
-				s.setCpf(rs.getString("cpf"));
-				s.setRG(rs.getString("rg"));
+				servidor.setCpf(rs.getString("cpf"));
+				servidor.setRG(rs.getString("rg"));
 				// Converte Date em LocalDate
-				Data dataManager = new Data();
-				s.setDataAdmissao(dataManager.getLocalDate(rs.getDate("data_admissao")));
-				s.setDataNasc(dataManager.getLocalDate(rs.getDate("data_nasc")));
-				s.setFuncao(rs.getString("funcao"));
-				s.setNome(rs.getString("nome"));
-				s.setMatricula(rs.getString("matricula"));
-				s.setQtdDependentes(rs.getInt("dependentes"));
+				servidor.setDataAdmissao(data.getLocalDate(rs.getDate("data_admissao")));
+				servidor.setDataNasc(data.getLocalDate(rs.getDate("data_nasc")));
+				servidor.setFuncao(rs.getString("funcao"));
+				servidor.setNome(rs.getString("nome"));
+				servidor.setMatricula(rs.getString("matricula"));
+				servidor.setQtdDependentes(rs.getInt("dependentes"));
 
 				Ficha fichaServidor = new Ficha();
 				fichaServidor.setNomePai(rs.getString("nome_pai"));
@@ -122,19 +123,15 @@ public class ServidorDB {
 				enderecoServidor.setRua(rs.getString("rua"));
 				enderecoServidor.setNumero(rs.getInt("numero_rua"));
 				fichaServidor.setEndereco(enderecoServidor);
-				s.setFicha(fichaServidor);
+				servidor.setFicha(fichaServidor);
 			}
 			DataBase.close();
 		} catch (SQLException e) {
-			{
-				Alert a = new Alert(AlertType.ERROR);
-				a.setHeaderText("Falha ao acessar banco de dados!!");
-				a.setContentText(e.getMessage());
-				a.show();
-			}
+			alertError.setContentText(e.getMessage());
+			alertError.show();
 			e.printStackTrace();
 		}
-		return s;
+		return servidor;
 	}
 
 	/**
@@ -144,34 +141,25 @@ public class ServidorDB {
 	 * @param cpf: utilizado como chave primária
 	 * @return numero de linhas alteradas no banco de dados
 	 */
-	public int delete(String cpf) {
+	public boolean delete(String cpf) {
 		String query = "DELETE FROM servidor WHERE cpf=?";
 		conn = DataBase.getConnection();
-		int rowsDeleted = 0;
 		try {
 			// Deleta convenios do servidor
-			deleteConvenioServidor(cpf);// apos remover convenios a conexão é fechada
-			conn = DataBase.getConnection();
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, cpf);
-			rowsDeleted = pstmt.executeUpdate();
+			if (deleteConvenioServidor(cpf)) {// apos remover convenios a conexão é fechada
+				conn = DataBase.getConnection();
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, cpf);
+				pstmt.executeUpdate();
+			}
 			DataBase.close();
-			{
-				Alert a = new Alert(AlertType.INFORMATION);
-				a.setHeaderText("Servidor deletado!");
-				a.setContentText("Todas as informações referentes ao servidor " + cpf + " foram deletadas!!");
-				a.show();
-			}
 		} catch (SQLException e) {
-			{
-				Alert a = new Alert(AlertType.ERROR);
-				a.setHeaderText("Falha ao tentar deletar servidor: " + cpf + "\n" + e.getMessage());
-				a.show();
-			}
+			alertError.setHeaderText("Falha ao tentar deletar servidor: " + cpf + "\n" + e.getMessage());
+			alertError.show();
 			e.printStackTrace();
+			return false;
 		}
-
-		return rowsDeleted;
+		return true;
 	}
 
 	public boolean update(Servidor servidor) {
@@ -186,9 +174,8 @@ public class ServidorDB {
 			pstmt.setString(4, servidor.getMatricula());
 			pstmt.setString(5, servidor.getFuncao());
 			pstmt.setInt(6, servidor.getQtdDependentes());
-			Data dataManager = new Data();
-			pstmt.setDate(7, dataManager.getDate(servidor.getDataAdmissao()));
-			pstmt.setDate(8, dataManager.getDate(servidor.getDataNasc()));
+			pstmt.setDate(7, data.getDate(servidor.getDataAdmissao()));
+			pstmt.setDate(8, data.getDate(servidor.getDataNasc()));
 
 			Ficha fichaServidor = servidor.getFicha();
 			pstmt.setString(9, fichaServidor.getNomePai());
@@ -205,23 +192,14 @@ public class ServidorDB {
 			pstmt.setInt(20, fichaServidor.getEndereco().getNumero());
 			pstmt.setString(21, servidor.getCpf());
 
-			pstmt.execute();
+			pstmt.executeUpdate();
 			DataBase.close();
 		} catch (SQLException e) {
-			{
-				Alert a = new Alert(AlertType.ERROR);
-				a.setHeaderText("Falha ao tentar atualizar servidor");
-				a.setContentText(e.getMessage());
-				a.show();
-			}
+			alertError.setHeaderText("Falha ao tentar atualizar servidor");
+			alertError.setContentText(e.getMessage());
+			alertError.show();
 			e.printStackTrace();
 			return false;
-		}
-		{
-			Alert a = new Alert(AlertType.INFORMATION);
-			a.setHeaderText("Servidor atualizado!!!");
-			a.setContentText("Servidor " + servidor.getCpf() + " atualizado!!");
-			a.show();
 		}
 		return true;
 	}
@@ -237,16 +215,14 @@ public class ServidorDB {
 
 			servidores = new ArrayList<Servidor>();
 			Servidor servidor = null;
-
-			Data dataManager = new Data();
 			while (rs.next()) {
 				servidor = new Servidor();
 				servidor.setCpf(rs.getString("cpf"));
 				servidor.setRG(rs.getString("rg"));
-				
+
 				// Converte Date em LocalDate
-				servidor.setDataAdmissao(dataManager.getLocalDate(rs.getDate("data_admissao")));
-				servidor.setDataNasc(dataManager.getLocalDate(rs.getDate("data_nasc")));
+				servidor.setDataAdmissao(data.getLocalDate(rs.getDate("data_admissao")));
+				servidor.setDataNasc(data.getLocalDate(rs.getDate("data_nasc")));
 				servidor.setFuncao(rs.getString("funcao"));
 				servidor.setNome(rs.getString("nome"));
 				servidor.setMatricula(rs.getString("matricula"));
@@ -274,128 +250,22 @@ public class ServidorDB {
 			DataBase.close();
 
 		} catch (SQLException e) {
-			{
-				Alert a = new Alert(AlertType.ERROR);
-				a.setHeaderText("Falha ao acessar banco de dados!!");
-				a.setContentText(e.getMessage());
-				a.show();
-			}
+			alertError.setContentText(e.getMessage());
+			alertError.show();
 			e.printStackTrace();
 		}
 		return servidores;
 	}
 
+	/**
+	 * Salva todos servidores da lista no Banco de Dados
+	 * 
+	 * @param servidores
+	 */
 	public void saveAll(List<Servidor> servidores) {
 		servidores.forEach(s -> {
 			save(s);
 		});
-	}
-
-	/// Convenio Servidor //////////////
-
-	public void saveServidorConvenio(ServidorConvenio sc) {
-		String query = "INSERT INTO servidor_convenio (codigo_servidor, codigo_convenio, data_adesao)"
-				+ "values(?, ?, ?);";
-		conn = DataBase.getConnection();
-		try {
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, sc.getServidor().getCpf());
-			pstmt.setString(2, sc.getConvenio().getNome());
-			pstmt.setDate(3, new Data().getDate(sc.getConvenio().getDataAdesao()));
-			pstmt.executeUpdate();
-			DataBase.close();
-		} catch (SQLException e) {
-			{
-				Alert a = new Alert(AlertType.ERROR);
-				a.setHeaderText("Falha ao salvar convenio!!");
-				a.setContentText(e.getMessage());
-				a.show();
-			}
-			e.printStackTrace();
-		}
-	}
-
-	public List<ServidorConvenio> getAllServidorConvenio(Servidor servidor) {
-		String query = "SELECT codigo_convenio FROM servidor_convenio WHERE  codigo_servidor=?;";
-		conn = DataBase.getConnection();
-		List<ServidorConvenio> sclist = null;
-
-		try {
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, servidor.getCpf());
-			rs = pstmt.executeQuery();
-			sclist = new ArrayList<ServidorConvenio>();
-			ConvenioDB cvDB = new ConvenioDB();
-			ServidorConvenio sc = null;
-			while (rs.next()) {
-				sc = new ServidorConvenio(servidor, cvDB.select(rs.getString("codigo_convenio")));
-				sclist.add(sc);
-			}
-			DataBase.close();
-		} catch (SQLException e) {
-			{
-				Alert a = new Alert(AlertType.ERROR);
-				a.setHeaderText("Falha ao acessar banco de dados!!");
-				a.setContentText(e.getMessage());
-				a.show();
-			}
-			e.printStackTrace();
-		}
-		return sclist;
-	}
-
-	public List<ServidorConvenio> getAllServidorConvenio(Convenio convenio) {
-		String query = "SELECT codigo_servidor FROM servidor_convenio WHERE  codigo_convenio=?;";
-		conn = DataBase.getConnection();
-		List<ServidorConvenio> sclist = null;
-
-		try {
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, convenio.getNome());
-			rs = pstmt.executeQuery();
-			sclist = new ArrayList<ServidorConvenio>();
-			ServidorDB sDB = new ServidorDB();
-			ServidorConvenio sc = null;
-			while (rs.next()) {
-				sc = new ServidorConvenio(sDB.select(rs.getString("codigo_servidor")), convenio);
-				sclist.add(sc);
-			}
-			DataBase.close();
-		} catch (SQLException e) {
-			{
-				Alert a = new Alert(AlertType.ERROR);
-				a.setHeaderText("Falha ao acessar banco de dados!!");
-				a.setContentText(e.getMessage());
-				a.show();
-			}
-			e.printStackTrace();
-		}
-		return sclist;
-	}
-
-	public void saveAllServidorConvenio(List<ServidorConvenio> sclist) {
-		sclist.forEach(a -> saveServidorConvenio(a));
-	}
-
-	private boolean deleteConvenioServidor(String codigoServidor) {
-		String query = "DELETE FROM servidor_convenio WHERE codigo_servidor=?;";
-		conn = DataBase.getConnection();
-		try {
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, codigoServidor);
-			pstmt.executeUpdate();
-			DataBase.close();
-		} catch (SQLException e) {
-			{
-				Alert a = new Alert(AlertType.ERROR);
-				a.setHeaderText("Falha ao acessar banco de dados!!");
-				a.setContentText(e.getMessage());
-				a.show();
-			}
-			e.printStackTrace();
-			return false;
-		}
-		return true;
 	}
 
 	public boolean deleteConvenio(String codigo) {
@@ -407,49 +277,113 @@ public class ServidorDB {
 			pstmt.executeUpdate();
 			DataBase.close();
 		} catch (SQLException e) {
-			{
-				Alert a = new Alert(AlertType.ERROR);
-				a.setHeaderText("Falha ao acessar banco de dados!!");
-				a.setContentText(e.getMessage());
-				a.show();
-			}
+			alertError.setContentText(e.getMessage());
+			alertError.show();
 			e.printStackTrace();
 			return false;
 		}
 		return true;
 	}
 
-	public List<ServidorConvenio> getAllServidorConvenio() {
-		String query = "SELECT * FROM servidor_convenio;";
+	/**
+	 * Salva lista de ServidorConvenio no Banco de Dados
+	 * 
+	 * @param sclist
+	 */
+	public void saveAllServidorConvenio(List<ServidorConvenio> sclist) {
+		sclist.forEach(a -> saveServidorConvenio(a));
+	}
+
+	private List<ServidorConvenio> getAllServidorConvenio(String query) {
 		conn = DataBase.getConnection();
 		List<ServidorConvenio> sclist = null;
 
 		try {
+			System.out.println(query);
 			pstmt = conn.prepareStatement(query);
 			rs = pstmt.executeQuery();
+			sclist = new ArrayList<ServidorConvenio>(5);
 
-			sclist = new ArrayList<ServidorConvenio>();
-			ServidorDB sdb = new ServidorDB();
-			ConvenioDB cdb = new ConvenioDB();
+			ServidorDB sDB = new ServidorDB();
+			ConvenioDB cvDB = new ConvenioDB();
+			Data data = new Data();
+			Servidor s = null;
+			Convenio c = null;
 			ServidorConvenio sc = null;
-			Servidor servidor = null;
-			Convenio convenio = null;
+			Double valor = null;
 			while (rs.next()) {
-				servidor = sdb.select(rs.getString("codigo_servidor"));
-				convenio = cdb.select(rs.getString("codigo_convenio"));
-				sc = new ServidorConvenio(servidor, convenio);
+				s = sDB.select(rs.getString("codigo_servidor"));
+				c = cvDB.select(rs.getLong("codigo_convenio"));
+				/*
+				 * Calcula valor total do convenio do servidor
+				 */
+				if (c.isDependentesInlude()) {
+					valor = Double.valueOf(s.getQtdDependentes() * c.getValor());
+				} else
+					valor = Double.valueOf(c.getValor());
+				sc = new ServidorConvenio(c.getNome(), c.getCodigo(),s.getCpf(), data.getLocalDate(rs.getDate("data_adesao")), valor);
 				sclist.add(sc);
 			}
 			DataBase.close();
 		} catch (SQLException e) {
-			{
-				Alert a = new Alert(AlertType.ERROR);
-				a.setHeaderText("Falha ao acessar banco de dados!!");
-				a.setContentText(e.getMessage());
-				a.show();
-			}
+			alertError.setContentText(e.getMessage());
+			alertError.show();
 			e.printStackTrace();
 		}
 		return sclist;
 	}
+
+	public List<ServidorConvenio> getAllServidorConvenio(Convenio convenio) {
+		String query = "SELECT * FROM servidor_convenio WHERE  codigo_convenio='" + convenio.getCodigo() + "';";
+		return getAllServidorConvenio(query);
+	}
+
+	public List<ServidorConvenio> getAllServidorConvenio(Servidor servidor) {
+		String query = "SELECT * FROM servidor_convenio WHERE  codigo_servidor='" + servidor.getCpf() + "';";
+		return getAllServidorConvenio(query);
+	}
+
+	public List<ServidorConvenio> getAllServidorConvenio() {
+		String query = "SELECT * FROM servidor_convenio";
+		return getAllServidorConvenio(query);
+	}
+	/// Convenio Servidor //////////////
+
+	public boolean saveServidorConvenio(ServidorConvenio sc) {
+		String query = "INSERT INTO servidor_convenio (codigo_servidor, codigo_convenio, data_adesao)"
+				+ "values(?, ?, ?);";
+		conn = DataBase.getConnection();
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, sc.getCpf());
+			pstmt.setLong(2, sc.getCodigoConvenio());
+			pstmt.setDate(3, new Data().getDate(sc.getDataAdesao()));
+			pstmt.executeUpdate();
+			DataBase.close();
+		} catch (SQLException e) {
+			alertError.setHeaderText("Falha ao salvar convenio!!");
+			alertError.setContentText(e.getMessage());
+			alertError.show();
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	private boolean deleteConvenioServidor(String codigoServidor) {
+		String query = "DELETE FROM servidor_convenio WHERE codigo_servidor='" + codigoServidor + "';";
+		conn = DataBase.getConnection();
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.executeUpdate();
+			DataBase.close();
+		} catch (SQLException e) {
+			alertError.setContentText(e.getMessage());
+			alertError.show();
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
 }

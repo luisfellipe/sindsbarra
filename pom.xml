@@ -6,6 +6,9 @@
 	<artifactId>sindsbarra</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
+	<name>Sindsbarra</name>
+	<url>https://github.com/luisfellipe/sindsbarra</url>
+	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -13,7 +16,9 @@
 		<itext.version>7.1.13</itext.version>
 		<javafx.main>br.com.sindsbarra.Main</javafx.main>
 	</properties>
+
 	<dependencies>
+
 		<!-- https://mvnrepository.com/artifact/com.itextpdf/itext7-core -->
 		<!-- https://kb.itextpdf.com/home/it7kb/installation-guidelines/installing-itext-7-for-java -->
 		<!-- always needed -->
@@ -35,18 +40,6 @@
 			<version>${itext.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.itextpdf</groupId>
-			<artifactId>pdfa</artifactId>
-			<version>${itext.version}</version>
-		</dependency>
-		<!-- only needed for hyphenation -->
-		<dependency>
-			<groupId>com.itextpdf</groupId>
-			<artifactId>hyph</artifactId>
-			<version>${itext.version}</version>
-		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/com.opencsv/opencsv -->
 		<dependency>
 			<groupId>com.opencsv</groupId>
@@ -60,6 +53,14 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.20</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
+		<dependency>
+			<groupId>org.xerial</groupId>
+			<artifactId>sqlite-jdbc</artifactId>
+			<version>3.34.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
@@ -89,72 +90,6 @@
 					<mainClass>${javafx.main}</mainClass>
 				</configuration>
 			</plugin>
-			
-			<plugin>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.1</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<transformers>
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>${javafx.main}</mainClass>
-								</transformer>
-							</transformers>
-							<filters>
-								<filter>
-									<artifact>*:*</artifact>
-									<excludes>
-										<exclude>META-INF/*.SF</exclude>
-										<exclude>META-INF/*.DSA</exclude>
-										<exclude>META-INF/*.RSA</exclude>
-									</excludes>
-								</filter>
-							</filters>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.1.2</version>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>
-								${project.build.directory}/libs
-							</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin> 
-			
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.2.0</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<classpathPrefix>libs/</classpathPrefix>
-							<mainClass>${javafx.main}</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -181,9 +116,6 @@
 				</executions>
 			</plugin>
 
-			
 		</plugins>
 	</build>
-	<name>sindsbarra</name>
-	<url>https://github.com/luisfellipe/sindsbarra</url>
 </project>

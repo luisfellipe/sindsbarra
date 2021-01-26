@@ -12,7 +12,7 @@ public enum EstadoCivil {
 		case SOLT: return "Solteiro(a)";
 		case CASAD: return "Casado(a)";
 		case VIUV: return "Viuvo(a)";
-		case DIV: return "Divorciado(A)";
+		case DIV: return "Divorciado(a)";
 		default: return "Nenhum";
 		}
 	}

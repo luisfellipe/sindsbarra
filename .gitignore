@@ -1,5 +1,6 @@
+### Eclipse With Maven ###
+
 /bin/
-/nbproject/private/
 /teste/
 /target/
 *.class

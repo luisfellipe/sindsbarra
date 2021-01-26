@@ -1,8 +1,10 @@
 package br.com.sindsbarra.dao;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -33,8 +35,8 @@ public class DataBase {
 
 			if (conn != null) {
 				System.out.println("Conexão estabelecida ! ! !");
-				System.out.print("Banco de dados: "+ conn.getMetaData().getDatabaseProductName() + "\n"
-						+ "Versão: " + conn.getMetaData().getDatabaseProductVersion() + "\n");
+				System.out.print("Banco de dados: " + conn.getMetaData().getDatabaseProductName() + "\n" + "Versão: "
+						+ conn.getMetaData().getDatabaseProductVersion() + "\n");
 			} else {
 				System.out.println("Conexão falhou ! ! !");
 			}
@@ -48,7 +50,8 @@ public class DataBase {
 		} catch (SQLException e) {
 			{
 				Alert a = new Alert(AlertType.ERROR);
-				a.setHeaderText("Falha de conexão com o banco de dados\n" + e.getMessage());
+				a.setHeaderText("Falha de conexão com o banco de dados");
+				a.setContentText(e.getMessage());
 				a.show();
 			}
 			e.printStackTrace();
@@ -70,15 +73,4 @@ public class DataBase {
 		System.out.println("Banco de dados fechado . . .");
 	}
 
-	public void setConfigurations(String driveManager, String driver, String port, String dataBase, String url,
-			String host, String user, String password) {
-		this.driveManager = driveManager;
-		this.driver = driver;
-		this.port = port;
-		this.dataBase = dataBase;
-		this.url = url;		
-		this.host = host;
-		this.user = user;
-		this.password = password;
-	}
 }

@@ -1,6 +1,7 @@
 package br.com.sindsbarra.models;
 
 import java.sql.Date;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -14,8 +15,11 @@ public class Data {
 	}
 
 	public Data(String pattern) {
-		this.pattern = " pattern";
+		this.pattern = pattern;
 		formatter = DateTimeFormatter.ofPattern(pattern);
+	}
+	public DateTimeFormatter getDateTimeFormat() {
+		return formatter;
 	}
 
 	public Date getDate(LocalDate data) {
@@ -89,5 +93,10 @@ public class Data {
 			return false;
 		}
 		return true;
+	}
+
+	public Long getTimeLong() {
+
+		return Instant.now().getEpochSecond();
 	}
 }
